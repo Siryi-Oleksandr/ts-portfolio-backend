@@ -1,6 +1,5 @@
-import { getProjects } from "controllers/projectControllers";
+import { getProjects, addProject } from "../../controllers/projectControllers";
 import express from "express";
-import { addProject } from "../../controllers/projectControllers";
 
 const router = express.Router();
 

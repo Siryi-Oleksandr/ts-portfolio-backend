@@ -5,10 +5,10 @@ interface IProject extends Document {
   name: string;
   // codeURL: string;
   // livePageURL?: string;
-  // description?: string;
+  description?: string;
   // posterURL?: string | null;
   // posterID?: string | null;
-  // favorite: boolean;
+  favorite: boolean;
   // owner: Schema.Types.ObjectId;
 }
 
@@ -27,10 +27,10 @@ const projectSchema = new Schema<IProject>(
     // livePageURL: {
     //   type: String,
     // },
-    // description: {
-    //   type: String,
-    //   minlength: 30,
-    // },
+    description: {
+      type: String,
+      minlength: 30,
+    },
     // posterURL: {
     //   type: String,
     //   default: null,
@@ -39,10 +39,10 @@ const projectSchema = new Schema<IProject>(
     //   type: String,
     //   default: null,
     // },
-    // favorite: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    favorite: {
+      type: Boolean,
+      default: false,
+    },
     // owner: {
     //   type: Schema.Types.ObjectId,
     //   ref: "user",
