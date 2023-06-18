@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { controllerWrapper } from "../helpers";
+import { controllerWrapper, HttpError } from "../helpers";
 import ProjectModel from "../models/project";
 
 // *******************  /api/projects  ******************
@@ -37,4 +37,26 @@ const addProject = controllerWrapper(async (req: Request, res: Response) => {
   res.status(201).json(project);
 });
 
-export { getProjects, addProject };
+//* GET api/projects/:projectId
+const getProjectById = controllerWrapper(
+  async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const project = await ProjectModel.findById(projectId);
+    if (!project) {
+      throw new HttpError(404, `Project with ${projectId} not found`);
+    }
+    res.json(project);
+  }
+);
+
+//* DELETE api/projects/:projectId
+const removeProject = controllerWrapper(async (req: Request, res: Response) => {
+  const { projectId } = req.params;
+  const removedProject = await ProjectModel.findByIdAndRemove(projectId);
+  if (!removedProject) {
+    throw new HttpError(404, `Project with ${projectId} not found`);
+  }
+  res.json({ message: "project deleted" });
+});
+
+export { getProjects, addProject, getProjectById, removeProject };

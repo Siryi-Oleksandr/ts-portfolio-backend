@@ -3,11 +3,11 @@ import { handleMongooseError } from "../helpers/";
 
 interface IProject extends Document {
   name: string;
-  // codeURL: string;
-  // livePageURL?: string;
+  codeURL: string;
+  livePageURL?: string;
   description?: string;
-  // posterURL?: string | null;
-  // posterID?: string | null;
+  posterURL?: string | null;
+  posterID?: string | null;
   favorite: boolean;
   // owner: Schema.Types.ObjectId;
 }
@@ -20,25 +20,25 @@ const projectSchema = new Schema<IProject>(
       maxlength: 100,
       required: [true, "Set name for project"],
     },
-    // codeURL: {
-    //   type: String,
-    //   required: [true, "Set link to code current project"],
-    // },
-    // livePageURL: {
-    //   type: String,
-    // },
+    codeURL: {
+      type: String,
+      required: [true, "Set link to code current project"],
+    },
+    livePageURL: {
+      type: String,
+    },
     description: {
       type: String,
       minlength: 30,
     },
-    // posterURL: {
-    //   type: String,
-    //   default: null,
-    // },
-    // posterID: {
-    //   type: String,
-    //   default: null,
-    // },
+    posterURL: {
+      type: String,
+      default: null,
+    },
+    posterID: {
+      type: String,
+      default: null,
+    },
     favorite: {
       type: Boolean,
       default: false,
