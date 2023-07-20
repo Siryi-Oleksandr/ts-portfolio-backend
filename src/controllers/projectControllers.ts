@@ -4,7 +4,7 @@ import ProjectModel from "../models/project";
 
 // *******************  /api/projects  ******************
 
-//* GET api/projects
+//* GET /projects
 const getProjects = controllerWrapper(async (req: Request, res: Response) => {
   const { page = 1, limit = 10 } = req.query as {
     page?: number;
@@ -19,7 +19,7 @@ const getProjects = controllerWrapper(async (req: Request, res: Response) => {
   res.json(projects);
 });
 
-//* POST api/projects
+//* POST /projects
 const addProject = controllerWrapper(async (req: Request, res: Response) => {
   //   const { _id: owner } = req.user;
   //   const { path: tempUpload } = req.file;
@@ -37,7 +37,7 @@ const addProject = controllerWrapper(async (req: Request, res: Response) => {
   res.status(201).json(project);
 });
 
-//* GET api/projects/:projectId
+//* GET /projects/:projectId
 const getProjectById = controllerWrapper(
   async (req: Request, res: Response) => {
     const { projectId } = req.params;
@@ -49,7 +49,7 @@ const getProjectById = controllerWrapper(
   }
 );
 
-//* DELETE api/projects/:projectId
+//* DELETE /projects/:projectId
 const removeProject = controllerWrapper(async (req: Request, res: Response) => {
   const { projectId } = req.params;
   const removedProject = await ProjectModel.findByIdAndRemove(projectId);

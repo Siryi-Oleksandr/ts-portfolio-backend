@@ -4,9 +4,9 @@ import {
   addProject,
   getProjectById,
   removeProject,
-} from "../../controllers/projectControllers";
-import { isValidId, isValidBody } from "../../middlewares";
-import { joiProjectsSchema } from "../../helpers";
+} from "../controllers/projectControllers";
+import { isValidId, isValidBody } from "../middlewares";
+import { joiProjectsSchema } from "../helpers";
 
 const router = express.Router();
 
