@@ -1,10 +1,10 @@
 import { Response, Request } from "express";
-import { controllerWrapper } from "../helpers";
+import { controllerWrapper, HttpError } from "../helpers";
 import ProjectModel from "../models/project";
 
 // *******************  /api/projects  ******************
 
-//* GET api/projects
+//* GET /projects
 const getProjects = controllerWrapper(async (req: Request, res: Response) => {
   const { page = 1, limit = 10 } = req.query as {
     page?: number;
@@ -19,7 +19,7 @@ const getProjects = controllerWrapper(async (req: Request, res: Response) => {
   res.json(projects);
 });
 
-//* POST api/projects
+//* POST /projects
 const addProject = controllerWrapper(async (req: Request, res: Response) => {
   //   const { _id: owner } = req.user;
   //   const { path: tempUpload } = req.file;
@@ -37,4 +37,26 @@ const addProject = controllerWrapper(async (req: Request, res: Response) => {
   res.status(201).json(project);
 });
 
-export { getProjects, addProject };
+//* GET /projects/:projectId
+const getProjectById = controllerWrapper(
+  async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const project = await ProjectModel.findById(projectId);
+    if (!project) {
+      throw new HttpError(404, `Project with ${projectId} not found`);
+    }
+    res.json(project);
+  }
+);
+
+//* DELETE /projects/:projectId
+const removeProject = controllerWrapper(async (req: Request, res: Response) => {
+  const { projectId } = req.params;
+  const removedProject = await ProjectModel.findByIdAndRemove(projectId);
+  if (!removedProject) {
+    throw new HttpError(404, `Project with ${projectId} not found`);
+  }
+  res.json({ message: "project deleted" });
+});
+
+export { getProjects, addProject, getProjectById, removeProject };

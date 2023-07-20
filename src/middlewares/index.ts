@@ -1,3 +1,5 @@
 import isValidId from "./isValidId";
+import isValidBody from "./isValidBody";
+import auth from "./auth";
 
-export { isValidId };
+export { isValidId, isValidBody, auth };
