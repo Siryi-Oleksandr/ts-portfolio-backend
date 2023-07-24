@@ -4,7 +4,7 @@ import {
   login,
   logout,
   //   refresh,
-  //   getCurrentUser,
+    getCurrentUser,
   //   update,
   //   changePassword,
   //   googleAuth,
@@ -28,7 +28,7 @@ router.post("/register", isValidBody(joiAPI.registerSchema), register);
 router.post("/login", isValidBody(joiAPI.loginSchema), login);
 // router.post("/refresh", isValidBody(joiAPI.refreshSchema), refresh);
 router.post("/logout", auth, logout);
-// router.get("/current", auth, getCurrentUser);
+router.get("/current", auth, getCurrentUser);
 // router.patch(
 //   "/update",
 //   auth,
