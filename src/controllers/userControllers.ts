@@ -47,6 +47,9 @@ const register = controllerWrapper(async (req: Request, res: Response) => {
   const newUser = await UserModel.create({
     ...req.body,
     password: hashedPassword,
+    proffesion: "",
+    technicalStack: [],
+    experience: null,
     avatarURL,
     phone: "",
     telegram: "",
@@ -66,6 +69,9 @@ const register = controllerWrapper(async (req: Request, res: Response) => {
       telegram: newUser.telegram,
       summary: newUser.summary,
       avatarURL: newUser.avatarURL,
+      proffesion: newUser.proffesion,
+      technicalStack: newUser.technicalStack,
+      experience: newUser.experience,
     },
   });
 });
@@ -96,6 +102,9 @@ const login = controllerWrapper(async (req: Request, res: Response) => {
       telegram: user.telegram,
       summary: user.summary,
       avatarURL: user.avatarURL,
+      proffesion: user.proffesion,
+      technicalStack: user.technicalStack,
+      experience: user.experience,
     },
   });
 });
@@ -150,13 +159,26 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
     telegram,
     summary,
     avatarURL,
+    proffesion,
+    technicalStack,
+    experience,
     accessToken,
     refreshToken,
   } = req.user;
   res.json({
     accessToken,
     refreshToken,
-    user: { email, name, phone, telegram, summary, avatarURL },
+    user: {
+      email,
+      name,
+      phone,
+      telegram,
+      summary,
+      avatarURL,
+      proffesion,
+      technicalStack,
+      experience,
+    },
   });
 });
 
