@@ -135,6 +135,7 @@ const logout = controllerWrapper(async (req: any, res: Response) => {
 //* GET /current
 const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
   const {
+    _id,
     email,
     name,
     phone,
@@ -151,6 +152,7 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
     accessToken,
     refreshToken,
     user: {
+      _id,
       email,
       name,
       phone,
