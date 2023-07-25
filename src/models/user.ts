@@ -8,11 +8,11 @@ interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  proffesion: string;
-  experience: number;
+  proffesion?: string;
+  experience?: number;
   phone?: string;
   telegram?: string;
-  summary: string;
+  summary?: string;
   technicalStack?: string[];
   avatarURL?: string;
   avatarID?: string;
@@ -73,6 +73,21 @@ const userSchema = new Schema<IUser>(
     avatarID: {
       type: String,
       default: "",
+    },
+
+    proffesion: {
+      type: String,
+      default: "",
+    },
+
+    technicalStack: {
+      type: Array<string>,
+      default: [],
+    },
+
+    experience: {
+      type: Number,
+      default: null,
     },
   },
 

@@ -47,32 +47,20 @@ const register = controllerWrapper(async (req: Request, res: Response) => {
   const newUser = await UserModel.create({
     ...req.body,
     password: hashedPassword,
-    proffesion: "",
-    technicalStack: [],
-    experience: null,
     avatarURL,
-    phone: "",
-    telegram: "",
-    summary: "",
   });
 
   const { accessToken, refreshToken } = assignTokens(newUser);
-  await UserModel.findByIdAndUpdate(newUser._id, { accessToken, refreshToken });
+  const createdUser = await UserModel.findByIdAndUpdate(
+    newUser._id,
+    { accessToken, refreshToken },
+    { new: true, select: "-createdAt -updatedAt -accessToken -refreshToken" }
+  );
 
   res.status(201).json({
     accessToken,
     refreshToken,
-    user: {
-      name: newUser.name,
-      email: newUser.email,
-      phone: newUser.phone,
-      telegram: newUser.telegram,
-      summary: newUser.summary,
-      avatarURL: newUser.avatarURL,
-      proffesion: newUser.proffesion,
-      technicalStack: newUser.technicalStack,
-      experience: newUser.experience,
-    },
+    user: createdUser,
   });
 });
 
@@ -90,22 +78,16 @@ const login = controllerWrapper(async (req: Request, res: Response) => {
   }
 
   const { accessToken, refreshToken } = assignTokens(user);
-  await UserModel.findByIdAndUpdate(user._id, { accessToken, refreshToken });
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    user._id,
+    { accessToken, refreshToken },
+    { new: true, select: "-createdAt -updatedAt -accessToken -refreshToken" }
+  );
 
   res.json({
     accessToken,
     refreshToken,
-    user: {
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      telegram: user.telegram,
-      summary: user.summary,
-      avatarURL: user.avatarURL,
-      proffesion: user.proffesion,
-      technicalStack: user.technicalStack,
-      experience: user.experience,
-    },
+    user: updatedUser,
   });
 });
 
