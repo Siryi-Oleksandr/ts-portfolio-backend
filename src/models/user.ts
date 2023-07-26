@@ -9,7 +9,7 @@ interface IUser extends Document {
   surname?: string;
   email: string;
   password: string;
-  proffesion?: string;
+  profession?: string;
   experience?: number;
   phone?: string;
   telegram?: string;
@@ -93,7 +93,7 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
 
-    proffesion: {
+    profession: {
       type: String,
       default: "",
     },
