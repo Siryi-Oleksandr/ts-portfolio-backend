@@ -20,10 +20,6 @@ interface RequestBody {
   email: string;
   password: string;
   name?: string;
-  phone?: string;
-  telegram?: string;
-  summary?: string;
-  avatarURL: string;
 }
 
 // interface IUser {
@@ -54,7 +50,11 @@ const register = controllerWrapper(async (req: Request, res: Response) => {
   const createdUser = await UserModel.findByIdAndUpdate(
     newUser._id,
     { accessToken, refreshToken },
-    { new: true, select: "-createdAt -updatedAt -accessToken -refreshToken" }
+    {
+      new: true,
+      select:
+        "-createdAt -updatedAt -accessToken -refreshToken -password -avatarID",
+    }
   );
 
   res.status(201).json({
@@ -81,7 +81,11 @@ const login = controllerWrapper(async (req: Request, res: Response) => {
   const updatedUser = await UserModel.findByIdAndUpdate(
     user._id,
     { accessToken, refreshToken },
-    { new: true, select: "-createdAt -updatedAt -accessToken -refreshToken" }
+    {
+      new: true,
+      select:
+        "-createdAt -updatedAt -accessToken -refreshToken -password -avatarID",
+    }
   );
 
   res.json({
@@ -138,8 +142,11 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
     _id,
     email,
     name,
+    surname,
     phone,
     telegram,
+    linkedinURL,
+    gitHubURL,
     summary,
     avatarURL,
     proffesion,
@@ -155,8 +162,11 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
       _id,
       email,
       name,
+      surname,
       phone,
       telegram,
+      linkedinURL,
+      gitHubURL,
       summary,
       avatarURL,
       proffesion,

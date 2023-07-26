@@ -6,6 +6,7 @@ const emailRegexp: RegExp =
 
 interface IUser extends Document {
   name: string;
+  surname?: string;
   email: string;
   password: string;
   proffesion?: string;
@@ -16,6 +17,8 @@ interface IUser extends Document {
   technicalStack?: string[];
   avatarURL?: string;
   avatarID?: string;
+  linkedinURL?: string;
+  gitHubURL?: string;
   refreshToken: string;
   accessToken: string;
 }
@@ -27,6 +30,11 @@ const userSchema = new Schema<IUser>(
       minlength: 2,
       maxlength: 35,
       required: [true, "Set name for account"],
+    },
+    surname: {
+      type: String,
+      minlength: 2,
+      maxlength: 35,
     },
     email: {
       type: String,
@@ -46,6 +54,16 @@ const userSchema = new Schema<IUser>(
     },
 
     telegram: {
+      type: String,
+      default: "",
+    },
+
+    linkedinURL: {
+      type: String,
+      default: "",
+    },
+
+    gitHubURL: {
       type: String,
       default: "",
     },
