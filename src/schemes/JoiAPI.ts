@@ -111,7 +111,7 @@ class JoiAPI {
         "The length of 'summary' must be between 10 and 5000 characters",
     }),
 
-    // technicalStack: Joi.array().items(Joi.string()),
+    technicalStack: Joi.string().allow(""),
 
     linkedinURL: Joi.string()
       .allow("")
