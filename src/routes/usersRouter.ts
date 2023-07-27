@@ -4,13 +4,13 @@ import {
   login,
   logout,
   //   refresh,
-    getCurrentUser,
-  //   update,
+  getCurrentUser,
+  update,
   //   changePassword,
   //   googleAuth,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
-import { isValidBody, auth } from "../middlewares";
+import { isValidBody, auth, upload } from "../middlewares";
 
 const router = express.Router();
 
@@ -29,13 +29,13 @@ router.post("/login", isValidBody(joiAPI.loginSchema), login);
 // router.post("/refresh", isValidBody(joiAPI.refreshSchema), refresh);
 router.post("/logout", auth, logout);
 router.get("/current", auth, getCurrentUser);
-// router.patch(
-//   "/update",
-//   auth,
-//   upload.single("avatar"),
-//   isValidBody(joiAPI.updateUserSchema),
-//   update
-// );
+router.patch(
+  "/update",
+  auth,
+  upload.single("avatar"),
+  isValidBody(joiAPI.updateUserSchema),
+  update
+);
 // router.patch(
 //   "/changePassword",
 //   auth,

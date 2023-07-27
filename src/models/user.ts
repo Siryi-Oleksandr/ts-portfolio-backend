@@ -3,6 +3,13 @@ import { handleMongooseError } from "../helpers";
 
 const emailRegexp: RegExp =
   /^([A-z0-9_-]+\.)*[A-z0-9_-]+@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z]{2,6}$/;
+const linkedinRegexp: RegExp =
+  /^(http(s)?:\/\/)?([\w]+\.)?linkedin\.com\/(pub|in|profile)\/([-a-zA-Z0-9]+)\/*/;
+const githubRegexp: RegExp =
+  /^([A-Za-z0-9]+@|http(|s)\:\/\/)([A-Za-z0-9.]+(:\d+)?)(?::|\/)([\d\/\w.-]+?)(\.git)?$/i;
+const telegramRegexp: RegExp =
+  /(https?:\/\/)?(www[.])?(telegram|t)\.me\/([a-zA-Z0-9_-]*)\/?$/;
+const phoneRegexp: RegExp = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
 
 interface IUser extends Document {
   name: string;
@@ -50,21 +57,25 @@ const userSchema = new Schema<IUser>(
 
     phone: {
       type: String,
+      match: phoneRegexp,
       default: "",
     },
 
     telegram: {
       type: String,
+      match: telegramRegexp,
       default: "",
     },
 
     linkedinURL: {
       type: String,
+      match: linkedinRegexp,
       default: "",
     },
 
     gitHubURL: {
       type: String,
+      match: githubRegexp,
       default: "",
     },
 
