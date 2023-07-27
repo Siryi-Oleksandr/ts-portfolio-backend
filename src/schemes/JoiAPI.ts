@@ -102,7 +102,7 @@ class JoiAPI {
 
     profession: Joi.string().allow(""),
 
-    experience: Joi.number().allow(null),
+    experience: Joi.string().allow(""),
 
     summary: Joi.string().allow("").min(10).max(5000).messages({
       "string.min":
@@ -111,7 +111,7 @@ class JoiAPI {
         "The length of 'summary' must be between 10 and 5000 characters",
     }),
 
-    technicalStack: Joi.array().items(Joi.string()),
+    // technicalStack: Joi.array().items(Joi.string()),
 
     linkedinURL: Joi.string()
       .allow("")
