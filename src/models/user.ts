@@ -115,8 +115,8 @@ const userSchema = new Schema<IUser>(
     },
 
     experience: {
-      type: Number,
-      default: null,
+      type: String,
+      default: "",
     },
   },
 
