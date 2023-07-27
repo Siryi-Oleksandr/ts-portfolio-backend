@@ -2,16 +2,17 @@ import Joi from "joi";
 
 class JoiAPI {
   private categoryType = ["to-do", "in-progress", "done"];
-  private priorityType = ["low", "medium", "high"];
 
   private emailRegexp: RegExp =
     /^([A-z0-9_-]+\.)*[A-z0-9_-]+@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z]{2,6}$/;
-  private dateRegexp: RegExp =
-    /[1-9][0-9][0-9]{2}-([0][1-9]|[1][0-2])-([1-2][0-9]|[0][1-9]|[3][0-1])/;
-  private timeRegexp: RegExp = /^([01]\d|2[0-3]):[0-5]\d$/;
+  private linkedinRegexp: RegExp =
+    /^(http(s)?:\/\/)?([\w]+\.)?linkedin\.com\/(pub|in|profile)\/([-a-zA-Z0-9]+)\/*/;
+  private githubRegexp: RegExp =
+    /^([A-Za-z0-9]+@|http(|s)\:\/\/)([A-Za-z0-9.]+(:\d+)?)(?::|\/)([\d\/\w.-]+?)(\.git)?$/i;
+  private telegramRegexp: RegExp =
+    /(https?:\/\/)?(www[.])?(telegram|t)\.me\/([a-zA-Z0-9_-]*)\/?$/;
   private phoneRegexp: RegExp =
-    /^(\d{2})\s\((\d{3})\)\s(\d{3})\s(\d{2})\s(\d{2})$/;
-  private birthdayRegexp: RegExp = /^\d{2}\/\d{2}\/\d{4}$/;
+    /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
 
   //* Class methods
 
@@ -51,41 +52,6 @@ class JoiAPI {
       .messages({ "any.required": "refreshToken is required" }),
   });
 
-  public tasksSchema = Joi.object({
-    title: Joi.string().min(3).max(250).required().messages({
-      "any.required": "Missing required 'title' field",
-      "string.min":
-        "The length of 'title' must be between 3 and 250 characters",
-      "string.max":
-        "The length of 'title' must be between 3 and 250 characters",
-    }),
-
-    start: Joi.string()
-      .pattern(new RegExp(this.timeRegexp))
-      .required()
-      .messages({ "any.required": "Missing required 'start time' field" }),
-
-    end: Joi.string()
-      .pattern(new RegExp(this.timeRegexp))
-      .required()
-      .messages({ "any.required": "Missing required 'end time' field" }),
-
-    priority: Joi.string()
-      .valid(...this.priorityType)
-      .required()
-      .messages({ "any.required": "Missing required 'priority' field" }),
-
-    date: Joi.string()
-      .pattern(new RegExp(this.dateRegexp))
-      .required()
-      .messages({ "any.required": "Missing required 'date' field" }),
-
-    category: Joi.string()
-      .valid(...this.categoryType)
-      .required()
-      .messages({ "any.required": "Missing required 'category' field" }),
-  });
-
   public reviewsSchema = Joi.object({
     text: Joi.string().min(2).max(300).required().messages({
       "any.required": "Missing required 'text' field",
@@ -106,6 +72,13 @@ class JoiAPI {
       "string.max": "The length of 'name' must be between 2 and 35 characters",
     }),
 
+    surname: Joi.string().min(2).max(35).messages({
+      "string.min":
+        "The length of 'surname' must be between 2 and 35 characters",
+      "string.max":
+        "The length of 'surname' must be between 2 and 35 characters",
+    }),
+
     email: Joi.string()
       .pattern(new RegExp(this.emailRegexp))
       .required()
@@ -116,17 +89,44 @@ class JoiAPI {
       .pattern(new RegExp(this.phoneRegexp))
       .messages({
         "string.pattern.base":
-          "The phone number format is incorrect. Please enter in the format 'XX (XXX) XXX XX XX'",
+          "The phone number format is incorrect. Please enter in the format '+XXXXXXXXXXXX'",
       }),
 
-    telegram: Joi.string().allow(""),
-
-    birthday: Joi.string()
+    telegram: Joi.string()
       .allow("")
-      .pattern(new RegExp(this.birthdayRegexp))
+      .pattern(new RegExp(this.telegramRegexp))
       .messages({
         "string.pattern.base":
-          "The birthday format is incorrect. Please enter in the format 24/08/1991",
+          "The telegram link format is incorrect. Please enter in the format 'https://t.me/Alex_Doe'",
+      }),
+
+    profession: Joi.string().allow(""),
+
+    experience: Joi.number().allow(null),
+
+    summary: Joi.string().allow("").min(10).max(5000).messages({
+      "string.min":
+        "The length of 'summary' must be between 10 and 5000 characters",
+      "string.max":
+        "The length of 'summary' must be between 10 and 5000 characters",
+    }),
+
+    technicalStack: Joi.array().items(Joi.string()),
+
+    linkedinURL: Joi.string()
+      .allow("")
+      .pattern(new RegExp(this.linkedinRegexp))
+      .messages({
+        "string.pattern.base":
+          "The Linkedin link format is incorrect. Please enter in the format 'https://www.linkedin.com/in/alex-doe/'",
+      }),
+
+    gitHubURL: Joi.string()
+      .allow("")
+      .pattern(new RegExp(this.githubRegexp))
+      .messages({
+        "string.pattern.base":
+          "The GitHub link format is incorrect. Please enter in the format 'https://github.com/Alex-Doe'",
       }),
   });
 

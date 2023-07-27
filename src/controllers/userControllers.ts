@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import gravatar from "gravatar";
-// import fs from "fs/promises";
+import fs from "fs/promises";
 import {
   HttpError,
   assignTokens,
   controllerWrapper,
-  // cloudinaryAPI,
-  // handleAvatar,
-  // dateServise,
+  cloudinaryUserAPI,
 } from "../helpers";
 import UserModel from "../models/user";
 // import jwt from "jsonwebtoken";
@@ -95,39 +93,6 @@ const login = controllerWrapper(async (req: Request, res: Response) => {
   });
 });
 
-//* POST /refresh
-// const refresh = controllerWrapper(async (req: Request, res: Response) => {
-//   const { refreshToken: token } = req.body;
-
-//   try {
-//     const { userId, userName, userEmail } = jwt.verify(
-//       token,
-//       REFRESH_TOKEN_SECRET_KEY
-//     ) as IUser;
-
-//     const isExist = await UserModel.findOne({ refreshToken: token });
-
-//     if (!isExist) {
-//       throw new HttpError(403, "Refresh token invalid");
-//     }
-
-//     const { accessToken, refreshToken } = assignTokens({
-//       _id: userId,
-//       name: userName,
-//       email: userEmail,
-//     });
-
-//     await UserModel.findByIdAndUpdate(userId, {
-//       accessToken,
-//       refreshToken,
-//     });
-
-//     res.json({ accessToken, refreshToken });
-//   } catch (error: any) {
-//     throw new HttpError(403, error.message);
-//   }
-// });
-
 //* POST /logout
 const logout = controllerWrapper(async (req: any, res: Response) => {
   const { _id } = req.user;
@@ -177,53 +142,47 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
 });
 
 //* PATCH /update
-// const update = controllerWrapper(async (req: any, res: Response) => {
-//   const { _id, avatarID, avatarURL, email } = req.user;
-//   const { email: newEmail, birthday } = req.body;
+const update = controllerWrapper(async (req: any, res: Response) => {
+  const { _id, avatarID, avatarURL, email } = req.user;
+  const { email: newEmail } = req.body;
 
-//   const existedUser = await UserModel.findOne({ email: newEmail });
+  const existedUser = await UserModel.findOne({ email: newEmail });
 
-//   if (existedUser && email !== newEmail) {
-//     throw new HttpError(409, `Email "${newEmail}" already exists`);
-//   }
-//   if (birthday && dateServise.isFutureDate(birthday)) {
-//     throw new HttpError(400, `Birthday can't be in the future`);
-//   }
+  if (existedUser && email !== newEmail) {
+    throw new HttpError(409, `Email "${newEmail}" already exists`);
+  }
 
-//   let newAvatarURL = avatarURL;
-//   let newAvatarID = avatarID;
+  let newAvatarURL = avatarURL;
+  let newAvatarID = avatarID;
 
-//   if (req.file) {
-//     const { path: tempUpload } = req.file;
+  if (req.file) {
+    const { path: tempUpload } = req.file;
+    const fileData = await cloudinaryUserAPI.upload(tempUpload);
+    newAvatarURL = fileData.url;
+    newAvatarID = fileData.public_id;
+    await fs.unlink(tempUpload);
 
-//     await handleAvatar(tempUpload);
+    if (avatarID) {
+      await cloudinaryUserAPI.delete(avatarID);
+    }
+  }
 
-//     const fileData = await cloudinaryAPI.upload(tempUpload);
-//     newAvatarURL = fileData.url;
-//     newAvatarID = fileData.public_id;
-//     await fs.unlink(tempUpload);
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    _id,
+    {
+      ...req.body,
+      avatarURL: newAvatarURL,
+      avatarID: newAvatarID,
+    },
+    {
+      new: true,
+      select:
+        "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt ",
+    }
+  );
 
-//     if (avatarID) {
-//       await cloudinaryAPI.delete(avatarID);
-//     }
-//   }
-
-//   const updatedUser = await UserModel.findByIdAndUpdate(
-//     _id,
-//     {
-//       ...req.body,
-//       avatarURL: newAvatarURL,
-//       avatarID: newAvatarID,
-//     },
-//     {
-//       new: true,
-//       select:
-//         "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt ",
-//     }
-//   );
-
-//   res.json(updatedUser);
-// });
+  res.json(updatedUser);
+});
 
 //* PATCH /changePassword
 // const changePassword = controllerWrapper(async (req: any, res: Response) => {
@@ -263,6 +222,39 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
 //   );
 // };
 
+//* POST /refresh
+// const refresh = controllerWrapper(async (req: Request, res: Response) => {
+//   const { refreshToken: token } = req.body;
+
+//   try {
+//     const { userId, userName, userEmail } = jwt.verify(
+//       token,
+//       REFRESH_TOKEN_SECRET_KEY
+//     ) as IUser;
+
+//     const isExist = await UserModel.findOne({ refreshToken: token });
+
+//     if (!isExist) {
+//       throw new HttpError(403, "Refresh token invalid");
+//     }
+
+//     const { accessToken, refreshToken } = assignTokens({
+//       _id: userId,
+//       name: userName,
+//       email: userEmail,
+//     });
+
+//     await UserModel.findByIdAndUpdate(userId, {
+//       accessToken,
+//       refreshToken,
+//     });
+
+//     res.json({ accessToken, refreshToken });
+//   } catch (error: any) {
+//     throw new HttpError(403, error.message);
+//   }
+// });
+
 // * exports
 export {
   register,
@@ -270,7 +262,7 @@ export {
   // refresh,
   logout,
   getCurrentUser,
-  // update,
+  update,
   // changePassword,
   // googleAuth,
 };
