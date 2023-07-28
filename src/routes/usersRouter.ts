@@ -6,6 +6,7 @@ import {
   //   refresh,
   getCurrentUser,
   update,
+  getUsers,
   //   changePassword,
   //   googleAuth,
 } from "../controllers/userControllers";
@@ -24,6 +25,7 @@ const router = express.Router();
 //   googleAuth
 // );
 
+router.get("/", getUsers);
 router.post("/register", isValidBody(joiAPI.registerSchema), register);
 router.post("/login", isValidBody(joiAPI.loginSchema), login);
 // router.post("/refresh", isValidBody(joiAPI.refreshSchema), refresh);
