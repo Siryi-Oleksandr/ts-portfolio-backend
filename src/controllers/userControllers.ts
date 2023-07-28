@@ -177,11 +177,51 @@ const update = controllerWrapper(async (req: any, res: Response) => {
     {
       new: true,
       select:
-        "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt ",
+        "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt",
     }
   );
 
   res.json(updatedUser);
+});
+
+//* GET /
+const getUsers = controllerWrapper(async (req: Request, res: Response) => {
+  const {
+    page = 1,
+    limit = 20,
+    query,
+  } = req.query as {
+    page?: number;
+    limit?: number;
+    query?: string;
+  };
+
+  const skip = (page - 1) * limit;
+
+  let users: any = [];
+
+  if (query) {
+    users = await UserModel.find(
+      {
+        $or: [
+          { name: { $regex: query, $options: "i" } },
+          { surname: { $regex: query, $options: "i" } },
+        ],
+      },
+      "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
+    )
+      .skip(skip)
+      .limit(limit);
+  } else {
+    users = await UserModel.find(
+      {},
+      "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
+    )
+      .skip(skip)
+      .limit(limit);
+  }
+
+  res.json(users);
 });
 
 //* PATCH /changePassword
@@ -263,6 +303,7 @@ export {
   logout,
   getCurrentUser,
   update,
+  getUsers,
   // changePassword,
   // googleAuth,
 };

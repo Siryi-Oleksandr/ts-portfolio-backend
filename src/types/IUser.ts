@@ -30,3 +30,18 @@ export interface IUserModel {
   refreshToken: string;
   accessToken: string;
 }
+
+export interface IUserResponse {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  telegram: string;
+  linkedinURL: string;
+  gitHubURL: string;
+  summary: string;
+  avatarURL: string;
+  profession: string;
+  technicalStack: string;
+  experience: string;
+}
