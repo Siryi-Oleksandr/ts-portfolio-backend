@@ -188,7 +188,7 @@ const update = controllerWrapper(async (req: any, res: Response) => {
 const getUsers = controllerWrapper(async (req: Request, res: Response) => {
   const {
     page = 1,
-    limit = 20,
+    limit = 10,
     query,
   } = req.query as {
     page?: number;
@@ -199,19 +199,29 @@ const getUsers = controllerWrapper(async (req: Request, res: Response) => {
   const skip = (page - 1) * limit;
 
   let users: any = [];
+  let totalCount: number = 0; // Initialize the total count to 0
 
   if (query) {
+    const queryRegex = new RegExp(query, "i"); //option "i" allows get result without matches register
     users = await UserModel.find(
       {
         $or: [
-          { name: { $regex: query, $options: "i" } },
-          { surname: { $regex: query, $options: "i" } },
+          { name: { $regex: queryRegex } },
+          { surname: { $regex: queryRegex } },
         ],
       },
       "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
     )
       .skip(skip)
       .limit(limit);
+
+    // Get the total count of users matching the query
+    totalCount = await UserModel.countDocuments({
+      $or: [
+        { name: { $regex: queryRegex } },
+        { surname: { $regex: queryRegex } },
+      ],
+    });
   } else {
     users = await UserModel.find(
       {},
@@ -219,9 +229,12 @@ const getUsers = controllerWrapper(async (req: Request, res: Response) => {
     )
       .skip(skip)
       .limit(limit);
+
+    // Get the total count of all users
+    totalCount = await UserModel.countDocuments({});
   }
 
-  res.json(users);
+  res.json({ users, totalCount }); // Include totalCount in the response
 });
 
 //* PATCH /changePassword
