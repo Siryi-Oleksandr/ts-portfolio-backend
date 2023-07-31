@@ -7,6 +7,7 @@ import {
   assignTokens,
   controllerWrapper,
   cloudinaryUserAPI,
+  parseTechnicalStack,
 } from "../helpers";
 import UserModel from "../models/user";
 // import jwt from "jsonwebtoken";
@@ -173,6 +174,7 @@ const update = controllerWrapper(async (req: any, res: Response) => {
       ...req.body,
       avatarURL: newAvatarURL,
       avatarID: newAvatarID,
+      technicalStack: parseTechnicalStack(req.body.technicalStack),
     },
     {
       new: true,

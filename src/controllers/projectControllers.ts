@@ -21,6 +21,18 @@ const getProjects = controllerWrapper(async (req: Request, res: Response) => {
     skip,
     limit,
   }).populate("owner", "name surname email avatarURL");
+
+  res.json(projects);
+});
+
+//* GET /projects/own
+const getOwnProjects = controllerWrapper(async (req: any, res: Response) => {
+  const { _id: owner } = req.user;
+  const projects = await ProjectModel.find(
+    { owner },
+    "-createdAt -updatedAt"
+  ).populate("owner", "name surname email avatarURL");
+
   res.json(projects);
 });
 
@@ -45,6 +57,10 @@ const addProject = controllerWrapper(async (req: any, res: Response) => {
     projectImages: [...uploadedPosters],
     technicalStack: parseTechnicalStack(req.body.technicalStack),
   });
+
+  if (!project) {
+    throw new HttpError(404, `Project is not created`);
+  }
 
   res.status(201).json(project);
 });
@@ -75,4 +91,16 @@ const removeProject = controllerWrapper(async (req: Request, res: Response) => {
   res.json({ message: "project deleted" });
 });
 
-export { getProjects, addProject, getProjectById, removeProject };
+export {
+  getProjects,
+  getOwnProjects,
+  addProject,
+  getProjectById,
+  removeProject,
+};
+
+// 1. додати проєкт POST /projects
+// 2. отримати всі проєкти GET /projects
+// 3. отримати всі власні проєкти GET /projects/own
+// 2. отримати проєкт по Id GET /projects/:projectId
+// 2. видалити DELETE /projects/:projectId

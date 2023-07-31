@@ -21,7 +21,7 @@ interface IUser extends Document {
   phone?: string;
   telegram?: string;
   summary?: string;
-  technicalStack?: string;
+  technicalStack?: string[];
   avatarURL?: string;
   avatarID?: string;
   linkedinURL?: string;
@@ -110,8 +110,8 @@ const userSchema = new Schema<IUser>(
     },
 
     technicalStack: {
-      type: String,
-      default: "",
+      type: [String],
+      default: [],
     },
 
     experience: {

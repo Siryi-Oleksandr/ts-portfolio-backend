@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getProjects,
+  getOwnProjects,
   addProject,
   getProjectById,
   removeProject,
@@ -11,11 +12,12 @@ import { joiAPI } from "../schemes/JoiAPI";
 const router = express.Router();
 
 router.get("/", getProjects);
+router.get("/own", auth, getOwnProjects);
 router.get("/:projectId", isValidId, getProjectById);
 router.post(
   "/",
   auth,
-  upload.array("posters", 5),
+  upload.array("posters", 4),
   isValidBody(joiAPI.projectSchema),
   addProject
 );

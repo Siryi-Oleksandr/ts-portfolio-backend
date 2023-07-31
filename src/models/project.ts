@@ -24,20 +24,17 @@ const projectSchema = new Schema<IProjectModel>(
     },
     projectImages: {
       type: [Object],
-      required: [true, "add at least one poster to the project"],
+      required: [true, "projectImages is required"],
     },
     aboutProject: {
       type: String,
-      required: [true, "Set description about the project"],
+      required: [true, "aboutProject is required"],
     },
-    // technicalStack: {
-    //   type: [String],
-    //   required: [true, "add at least one technical to the project"],
-    // }, // TODO temporary
     technicalStack: {
-      type: String,
-      default: "",
+      type: [String],
+      required: [true, "technicalStack is required"],
     },
+
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",

@@ -12,7 +12,6 @@ export interface IProjectModel {
   codeLink?: string;
   projectImages: IPoster[];
   aboutProject: string;
-  // technicalStack: string[];
-  technicalStack: string; // TODO temporary
+  technicalStack: string[];
   owner: Schema.Types.ObjectId;
 }

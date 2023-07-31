@@ -138,10 +138,9 @@ class JoiAPI {
       "any.required": "Missing required 'description project' field",
     }),
 
-    // technicalStack: Joi.array().items(Joi.string()).min(1).required().messages({
-    //   "any.required": "Add at least one technical to the project",
-    // }),
-    technicalStack: Joi.string().allow(""), // TODO change this
+    technicalStack: Joi.string().allow("").required().messages({
+      "any.required": "Add at least one technical to the project",
+    }),
   });
 
   public userPasswordSchema = Joi.object({
