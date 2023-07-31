@@ -1,32 +1,38 @@
 export interface IUserRegister {
   _id: string;
   name: string;
+  surname?: string;
   email: string;
   password: string;
-  proffesion: string;
-  experience: number;
-  phone: string;
-  telegram: string;
-  summary: string;
-  technicalStack: string[];
-  avatarURL: string;
-  avatarID: string;
+  profession?: string;
+  experience?: string;
+  phone?: string;
+  telegram?: string;
+  summary?: string;
+  technicalStack?: string[];
+  avatarURL?: string;
+  avatarID?: string;
+  linkedinURL?: string;
+  gitHubURL?: string;
   refreshToken: string;
   accessToken: string;
 }
 
 export interface IUserModel {
   name: string;
+  surname?: string;
   email: string;
   password: string;
-  proffesion: string;
-  experience: number;
+  profession?: string;
+  experience?: string;
   phone?: string;
   telegram?: string;
-  summary: string;
+  summary?: string;
   technicalStack?: string[];
   avatarURL?: string;
   avatarID?: string;
+  linkedinURL?: string;
+  gitHubURL?: string;
   refreshToken: string;
   accessToken: string;
 }

@@ -7,12 +7,13 @@ import {
   assignTokens,
   controllerWrapper,
   cloudinaryUserAPI,
+  parseTechnicalStack,
 } from "../helpers";
 import UserModel from "../models/user";
 // import jwt from "jsonwebtoken";
 // const { REFRESH_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
 
-// ******************* API:  /auth  ******************
+// ******************* API:  /  ******************
 
 interface RequestBody {
   email: string;
@@ -173,6 +174,7 @@ const update = controllerWrapper(async (req: any, res: Response) => {
       ...req.body,
       avatarURL: newAvatarURL,
       avatarID: newAvatarID,
+      technicalStack: parseTechnicalStack(req.body.technicalStack),
     },
     {
       new: true,

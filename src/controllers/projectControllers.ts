@@ -1,38 +1,66 @@
 import { Response, Request } from "express";
-import { controllerWrapper, HttpError } from "../helpers";
+import fs from "fs/promises";
+import {
+  cloudinaryProjectAPI,
+  controllerWrapper,
+  HttpError,
+  parseTechnicalStack,
+} from "../helpers";
 import ProjectModel from "../models/project";
 
-// *******************  /api/projects  ******************
+// *******************  /projects  ******************
 
 //* GET /projects
 const getProjects = controllerWrapper(async (req: Request, res: Response) => {
   const { page = 1, limit = 10 } = req.query as {
     page?: number;
     limit?: number;
-    favorite?: boolean;
   };
   const skip = (page - 1) * limit;
   const projects = await ProjectModel.find({}, "-createdAt -updatedAt", {
     skip,
     limit,
-  });
+  }).populate("owner", "name surname email avatarURL");
+
+  res.json(projects);
+});
+
+//* GET /projects/own
+const getOwnProjects = controllerWrapper(async (req: any, res: Response) => {
+  const { _id: owner } = req.user;
+  const projects = await ProjectModel.find(
+    { owner },
+    "-createdAt -updatedAt"
+  ).populate("owner", "name surname email avatarURL");
+
   res.json(projects);
 });
 
 //* POST /projects
-const addProject = controllerWrapper(async (req: Request, res: Response) => {
-  //   const { _id: owner } = req.user;
-  //   const { path: tempUpload } = req.file;
+const addProject = controllerWrapper(async (req: any, res: Response) => {
+  const { _id: owner } = req.user;
 
-  //   const fileData = await cloudinaryAPI.upload(tempUpload);
-  //   await fs.unlink(tempUpload);
+  // Upload each poster to Cloudinary
+  const uploadedPosters = await Promise.all(
+    req.files.map(async (file: Express.Multer.File) => {
+      const fileData = await cloudinaryProjectAPI.upload(file.path);
+      const posterURL = fileData.url;
+      const posterID = fileData.public_id;
+      await fs.unlink(file.path);
+      return { posterURL, posterID };
+    })
+  );
 
   const project = await ProjectModel.create({
     ...req.body,
-    // owner,
-    // posterURL: fileData.url,
-    // posterID: fileData.public_id,
+    owner,
+    projectImages: [...uploadedPosters],
+    technicalStack: parseTechnicalStack(req.body.technicalStack),
   });
+
+  if (!project) {
+    throw new HttpError(404, `Project is not created`);
+  }
 
   res.status(201).json(project);
 });
@@ -41,7 +69,11 @@ const addProject = controllerWrapper(async (req: Request, res: Response) => {
 const getProjectById = controllerWrapper(
   async (req: Request, res: Response) => {
     const { projectId } = req.params;
-    const project = await ProjectModel.findById(projectId);
+    const project = await ProjectModel.find(
+      { _id: projectId },
+      "-createdAt -updatedAt"
+    ).populate("owner", "name surname email avatarURL");
+
     if (!project) {
       throw new HttpError(404, `Project with ${projectId} not found`);
     }
@@ -59,4 +91,16 @@ const removeProject = controllerWrapper(async (req: Request, res: Response) => {
   res.json({ message: "project deleted" });
 });
 
-export { getProjects, addProject, getProjectById, removeProject };
+export {
+  getProjects,
+  getOwnProjects,
+  addProject,
+  getProjectById,
+  removeProject,
+};
+
+// 1. додати проєкт POST /projects
+// 2. отримати всі проєкти GET /projects
+// 3. отримати всі власні проєкти GET /projects/own
+// 2. отримати проєкт по Id GET /projects/:projectId
+// 2. видалити DELETE /projects/:projectId
