@@ -59,12 +59,7 @@ class JoiAPI {
       "string.max": "The length of 'name' must be between 2 and 35 characters",
     }),
 
-    surname: Joi.string().min(2).max(35).messages({
-      "string.min":
-        "The length of 'surname' must be between 2 and 35 characters",
-      "string.max":
-        "The length of 'surname' must be between 2 and 35 characters",
-    }),
+    surname: Joi.string().allow(""),
 
     email: Joi.string()
       .pattern(new RegExp(this.emailRegexp))

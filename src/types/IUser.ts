@@ -40,6 +40,7 @@ export interface IUserModel {
 export interface IUserResponse {
   _id: string;
   name: string;
+  surname: string;
   email: string;
   phone: string;
   telegram: string;
