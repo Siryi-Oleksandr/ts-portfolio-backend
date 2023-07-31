@@ -1,59 +1,54 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { handleMongooseError } from "../helpers/";
+import { IProjectModel } from "../types/IProject";
 
-interface IProject extends Document {
-  name: string;
-  codeURL: string;
-  livePageURL?: string;
-  description?: string;
-  posterURL?: string | null;
-  posterID?: string | null;
-  favorite: boolean;
-  // owner: Schema.Types.ObjectId;
-}
-
-const projectSchema = new Schema<IProject>(
+const projectSchema = new Schema<IProjectModel>(
   {
-    name: {
+    projectTitle: {
       type: String,
       minlength: 3,
       maxlength: 100,
-      required: [true, "Set name for project"],
+      required: [true, "Set title for project"],
     },
-    codeURL: {
+    projectSubTitle: {
       type: String,
-      required: [true, "Set link to code current project"],
+      minlength: 3,
+      maxlength: 100,
     },
-    livePageURL: {
+    projectLink: {
+      type: String,
+      required: [true, "Set link to project live page"],
+    },
+    codeLink: {
       type: String,
     },
-    description: {
+    projectImages: {
+      type: [Object],
+      required: [true, "add at least one poster to the project"],
+    },
+    aboutProject: {
       type: String,
-      minlength: 30,
+      required: [true, "Set description about the project"],
     },
-    posterURL: {
+    // technicalStack: {
+    //   type: [String],
+    //   required: [true, "add at least one technical to the project"],
+    // }, // TODO temporary
+    technicalStack: {
       type: String,
-      default: null,
+      default: "",
     },
-    posterID: {
-      type: String,
-      default: null,
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
     },
-    favorite: {
-      type: Boolean,
-      default: false,
-    },
-    // owner: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "user",
-    //   required: true,
-    // },
   },
   { versionKey: false, timestamps: true }
 );
 
-projectSchema.post<IProject>("save", handleMongooseError);
+projectSchema.post<IProjectModel>("save", handleMongooseError);
 
-const ProjectModel = model<IProject>("project", projectSchema);
+const ProjectModel = model<IProjectModel>("project", projectSchema);
 
 export default ProjectModel;

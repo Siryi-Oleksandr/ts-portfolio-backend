@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 class JoiAPI {
-  private categoryType = ["to-do", "in-progress", "done"];
+  // private categoryType = ["to-do", "in-progress", "done"];
 
   private emailRegexp: RegExp =
     /^([A-z0-9_-]+\.)*[A-z0-9_-]+@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z]{2,6}$/;
@@ -50,19 +50,6 @@ class JoiAPI {
     refreshToken: Joi.string()
       .required()
       .messages({ "any.required": "refreshToken is required" }),
-  });
-
-  public reviewsSchema = Joi.object({
-    text: Joi.string().min(2).max(300).required().messages({
-      "any.required": "Missing required 'text' field",
-      "string.min": "The length of 'text' must be between 2 and 300 characters",
-      "string.max": "The length of 'text' must be between 2 and 300 characters",
-    }),
-
-    rating: Joi.number().min(1).max(5).messages({
-      "number.min": "Number of 'rating' must be between 1 and 5",
-      "number.max": "Number of 'rating' must be between 1 and 5",
-    }),
   });
 
   public updateUserSchema = Joi.object({
@@ -130,11 +117,31 @@ class JoiAPI {
       }),
   });
 
-  public taskCategorySchema = Joi.object({
-    category: Joi.string()
-      .valid(...this.categoryType)
+  public projectSchema = Joi.object({
+    projectTitle: Joi.string().min(3).max(100).required().messages({
+      "any.required": "Missing required 'title' field",
+      "string.min":
+        "The length of 'title' must be between 3 and 100 characters",
+      "string.max":
+        "The length of 'title' must be between 3 and 100 characters",
+    }),
+
+    projectSubTitle: Joi.string().allow(""),
+
+    projectLink: Joi.string()
       .required()
-      .messages({ "any.required": "Missing required 'category' field" }),
+      .messages({ "any.required": "Missing required 'project link' field" }),
+
+    codeLink: Joi.string().allow(""),
+
+    aboutProject: Joi.string().required().messages({
+      "any.required": "Missing required 'description project' field",
+    }),
+
+    // technicalStack: Joi.array().items(Joi.string()).min(1).required().messages({
+    //   "any.required": "Add at least one technical to the project",
+    // }),
+    technicalStack: Joi.string().allow(""), // TODO change this
   });
 
   public userPasswordSchema = Joi.object({
