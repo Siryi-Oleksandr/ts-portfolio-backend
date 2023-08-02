@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import gravatar from "gravatar";
 import fs from "fs/promises";
 import {
   HttpError,
   assignTokens,
   controllerWrapper,
   cloudinaryUserAPI,
-  parseTechnicalStack,
 } from "../helpers";
 import UserModel from "../models/user";
 // import jwt from "jsonwebtoken";
@@ -35,14 +33,10 @@ const register = controllerWrapper(async (req: Request, res: Response) => {
     throw new HttpError(409, `Email "${email}" already exists`);
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email, {
-    s: "250",
-  });
 
   const newUser = await UserModel.create({
     ...req.body,
     password: hashedPassword,
-    avatarURL,
   });
 
   const { accessToken, refreshToken } = assignTokens(newUser);
@@ -174,7 +168,6 @@ const update = controllerWrapper(async (req: any, res: Response) => {
       ...req.body,
       avatarURL: newAvatarURL,
       avatarID: newAvatarID,
-      technicalStack: parseTechnicalStack(req.body.technicalStack),
     },
     {
       new: true,

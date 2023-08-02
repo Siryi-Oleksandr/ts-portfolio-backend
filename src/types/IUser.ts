@@ -9,7 +9,7 @@ export interface IUserRegister {
   phone?: string;
   telegram?: string;
   summary?: string;
-  technicalStack?: string[];
+  technicalStack?: string;
   avatarURL?: string;
   avatarID?: string;
   linkedinURL?: string;
@@ -28,7 +28,7 @@ export interface IUserModel {
   phone?: string;
   telegram?: string;
   summary?: string;
-  technicalStack?: string[];
+  technicalStack?: string;
   avatarURL?: string;
   avatarID?: string;
   linkedinURL?: string;
