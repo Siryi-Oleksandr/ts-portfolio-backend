@@ -31,7 +31,7 @@ const projectSchema = new Schema<IProjectModel>(
       required: [true, "aboutProject is required"],
     },
     technicalStack: {
-      type: [String],
+      type: String,
       required: [true, "technicalStack is required"],
     },
 
