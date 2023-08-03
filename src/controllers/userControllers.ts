@@ -138,7 +138,7 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
 
 //* PATCH /update
 const update = controllerWrapper(async (req: any, res: Response) => {
-  const { _id, avatarID, avatarURL, email } = req.user;
+  const { _id, avatarID, avatarURL, miniAvatarURL, email } = req.user;
   const { email: newEmail } = req.body;
 
   const existedUser = await UserModel.findOne({ email: newEmail });
@@ -149,10 +149,13 @@ const update = controllerWrapper(async (req: any, res: Response) => {
 
   let newAvatarURL = avatarURL;
   let newAvatarID = avatarID;
+  let newMiniAvatarURL = miniAvatarURL;
 
   if (req.file) {
     const { path: tempUpload } = req.file;
     const fileData = await cloudinaryUserAPI.upload(tempUpload);
+
+    newMiniAvatarURL = `https://res.cloudinary.com/dsjxdktiz/image/upload/c_thumb,g_faces,h_250,w_250/${fileData.public_id}.jpg`;
     newAvatarURL = fileData.url;
     newAvatarID = fileData.public_id;
     await fs.unlink(tempUpload);
@@ -168,6 +171,7 @@ const update = controllerWrapper(async (req: any, res: Response) => {
       ...req.body,
       avatarURL: newAvatarURL,
       avatarID: newAvatarID,
+      miniAvatarURL: newMiniAvatarURL,
     },
     {
       new: true,
