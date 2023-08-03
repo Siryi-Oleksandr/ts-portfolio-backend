@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import fs from "fs/promises";
 import { cloudinaryProjectAPI, controllerWrapper, HttpError } from "../helpers";
 import ProjectModel from "../models/project";
+import UserModel from "models/user";
 
 // *******************  /projects  ******************
 
@@ -23,13 +24,26 @@ const getProjects = controllerWrapper(async (req: Request, res: Response) => {
 //* GET /projects/own
 const getOwnProjects = controllerWrapper(async (req: any, res: Response) => {
   const { _id: owner } = req.user;
-  const projects = await ProjectModel.find(
-    { owner },
-    "-createdAt -updatedAt"
-  ).populate("owner", "name surname email avatarURL");
+  const projects = await ProjectModel.find({ owner });
 
   res.json(projects);
 });
+
+//* GET /projects/own/:userId
+const getProjectsByUserId = controllerWrapper(
+  async (req: any, res: Response) => {
+    const { userId: owner } = req.params;
+
+    const user = await UserModel.findById(owner);
+    if (!user) {
+      throw new HttpError(404, `User not found`);
+    }
+
+    const projects = await ProjectModel.find({ owner });
+
+    res.json(projects);
+  }
+);
 
 //* POST /projects
 const addProject = controllerWrapper(async (req: any, res: Response) => {
@@ -91,6 +105,7 @@ export {
   addProject,
   getProjectById,
   removeProject,
+  getProjectsByUserId,
 };
 
 // 1. додати проєкт POST /projects

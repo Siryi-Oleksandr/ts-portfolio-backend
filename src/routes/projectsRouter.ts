@@ -4,6 +4,7 @@ import {
   getOwnProjects,
   addProject,
   getProjectById,
+  getProjectsByUserId,
   removeProject,
 } from "../controllers/projectControllers";
 import { isValidId, isValidBody, auth, upload } from "../middlewares";
@@ -13,7 +14,8 @@ const router = express.Router();
 
 router.get("/", getProjects);
 router.get("/own", auth, getOwnProjects);
-router.get("/:projectId", isValidId, getProjectById);
+router.get("/own/:userId", isValidId("userId"), getProjectsByUserId);
+router.get("/:projectId", isValidId("projectId"), getProjectById);
 router.post(
   "/",
   auth,
@@ -21,6 +23,6 @@ router.post(
   isValidBody(joiAPI.projectSchema),
   addProject
 );
-router.delete("/:projectId", isValidId, removeProject);
+router.delete("/:projectId", isValidId("projectId"), removeProject);
 
 export default router;

@@ -109,6 +109,7 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
     gitHubURL,
     summary,
     avatarURL,
+    miniAvatarURL,
     profession,
     technicalStack,
     experience,
@@ -129,6 +130,7 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
       gitHubURL,
       summary,
       avatarURL,
+      miniAvatarURL,
       profession,
       technicalStack,
       experience,
@@ -236,6 +238,21 @@ const getUsers = controllerWrapper(async (req: Request, res: Response) => {
   res.json({ users, totalCount }); // Include totalCount in the response
 });
 
+//* GET /:userId
+const getUserById = controllerWrapper(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const user = await UserModel.find(
+    { _id: userId },
+    "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
+  );
+
+  if (!user) {
+    throw new HttpError(404, `User with ${userId} not found`);
+  }
+
+  res.json(user);
+});
+
 //* PATCH /changePassword
 // const changePassword = controllerWrapper(async (req: any, res: Response) => {
 //   const { _id } = req.user;
@@ -316,6 +333,7 @@ export {
   getCurrentUser,
   update,
   getUsers,
+  getUserById,
   // changePassword,
   // googleAuth,
 };

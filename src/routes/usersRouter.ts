@@ -7,11 +7,12 @@ import {
   getCurrentUser,
   update,
   getUsers,
+  getUserById,
   //   changePassword,
   //   googleAuth,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
-import { isValidBody, auth, upload } from "../middlewares";
+import { isValidBody, auth, upload, isValidId } from "../middlewares";
 
 const router = express.Router();
 
@@ -31,6 +32,7 @@ router.post("/login", isValidBody(joiAPI.loginSchema), login);
 // router.post("/refresh", isValidBody(joiAPI.refreshSchema), refresh);
 router.post("/logout", auth, logout);
 router.get("/current", auth, getCurrentUser);
+router.get("/:userId", isValidId("userId"), getUserById);
 router.patch(
   "/update",
   auth,

@@ -21,21 +21,6 @@ class CloudinaryAPI {
     return fileData;
   }
 
-  async uploadAvatar(tempPath: string) {
-    cloudinary.v2.image("samples/two-ladies.jpg", {
-      gravity: "faces",
-      height: 800,
-      width: 800,
-      crop: "thumb",
-    });
-
-    const fileData = await cloudinary.v2.uploader.upload(tempPath, {
-      folder: this.folder,
-    });
-
-    return fileData;
-  }
-
   async delete(fileID: string) {
     await cloudinary.v2.uploader.destroy(fileID);
   }
