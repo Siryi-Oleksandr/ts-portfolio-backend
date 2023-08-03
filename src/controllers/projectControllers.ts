@@ -2,7 +2,7 @@ import { Response, Request } from "express";
 import fs from "fs/promises";
 import { cloudinaryProjectAPI, controllerWrapper, HttpError } from "../helpers";
 import ProjectModel from "../models/project";
-import UserModel from "models/user";
+import UserModel from "../models/user";
 
 // *******************  /projects  ******************
 
