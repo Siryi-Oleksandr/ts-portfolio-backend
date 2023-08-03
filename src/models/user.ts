@@ -24,6 +24,7 @@ interface IUser extends Document {
   technicalStack?: string;
   avatarURL?: string;
   avatarID?: string;
+  miniAvatarURL?: string;
   linkedinURL?: string;
   gitHubURL?: string;
   refreshToken: string;
@@ -95,7 +96,14 @@ const userSchema = new Schema<IUser>(
 
     avatarURL: {
       type: String,
-      default: "",
+      default:
+        "https://res.cloudinary.com/dsjxdktiz/image/upload/v1690985797/avatars/nbewgn0cyuvs6rpjbqow.png",
+    },
+
+    miniAvatarURL: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dsjxdktiz/image/upload/v1690985797/avatars/nbewgn0cyuvs6rpjbqow.png",
     },
 
     avatarID: {

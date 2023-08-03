@@ -12,6 +12,7 @@ export interface IUserRegister {
   technicalStack?: string;
   avatarURL?: string;
   avatarID?: string;
+  miniAvatarURL?: string;
   linkedinURL?: string;
   gitHubURL?: string;
   refreshToken: string;
@@ -31,6 +32,7 @@ export interface IUserModel {
   technicalStack?: string;
   avatarURL?: string;
   avatarID?: string;
+  miniAvatarURL?: string;
   linkedinURL?: string;
   gitHubURL?: string;
   refreshToken: string;
@@ -48,6 +50,7 @@ export interface IUserResponse {
   gitHubURL: string;
   summary: string;
   avatarURL: string;
+  miniAvatarURL: string;
   profession: string;
   technicalStack: string;
   experience: string;
