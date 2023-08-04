@@ -19,7 +19,7 @@ router.get("/:projectId", isValidId("projectId"), getProjectById);
 router.post(
   "/",
   auth,
-  upload.array("posters", 4),
+  upload.array("posters", 3),
   isValidBody(joiAPI.projectSchema),
   addProject
 );
