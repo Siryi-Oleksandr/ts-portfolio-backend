@@ -52,9 +52,11 @@ const addProject = controllerWrapper(async (req: any, res: Response) => {
   // Upload each poster to Cloudinary
   const uploadedPosters = await Promise.all(
     req.files.map(async (file: Express.Multer.File) => {
+      await fs.access(file.path);
       const fileData = await cloudinaryProjectAPI.upload(file.path);
       const posterURL = fileData.url;
       const posterID = fileData.public_id;
+
       await fs.unlink(file.path);
       return { posterURL, posterID };
     })
