@@ -8,10 +8,10 @@ export interface IPoster {
 export interface IProjectModel {
   projectTitle: string;
   projectSubTitle?: string;
-  projectLink: string;
+  projectLink?: string;
   codeLink?: string;
   projectImages: IPoster[];
   aboutProject: string;
-  technicalStack: string;
+  technicalStack: [string];
   owner: Schema.Types.ObjectId;
 }

@@ -12,15 +12,16 @@ const projectSchema = new Schema<IProjectModel>(
     },
     projectSubTitle: {
       type: String,
-      minlength: 3,
       maxlength: 100,
+      default: "",
     },
     projectLink: {
       type: String,
-      required: [true, "Set link to project live page"],
+      default: "",
     },
     codeLink: {
       type: String,
+      default: "",
     },
     projectImages: {
       type: [Object],
@@ -31,7 +32,7 @@ const projectSchema = new Schema<IProjectModel>(
       required: [true, "aboutProject is required"],
     },
     technicalStack: {
-      type: String,
+      type: [String],
       required: [true, "technicalStack is required"],
     },
 

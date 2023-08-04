@@ -123,9 +123,7 @@ class JoiAPI {
 
     projectSubTitle: Joi.string().allow(""),
 
-    projectLink: Joi.string()
-      .required()
-      .messages({ "any.required": "Missing required 'project link' field" }),
+    projectLink: Joi.string().allow(""),
 
     codeLink: Joi.string().allow(""),
 
@@ -133,7 +131,7 @@ class JoiAPI {
       "any.required": "Missing required 'description project' field",
     }),
 
-    technicalStack: Joi.string().allow("").required().messages({
+    technicalStack: Joi.string().required().messages({
       "any.required": "Add at least one technical to the project",
     }),
   });

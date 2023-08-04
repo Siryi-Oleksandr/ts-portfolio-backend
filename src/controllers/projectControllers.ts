@@ -1,6 +1,11 @@
 import { Response, Request } from "express";
 import fs from "fs/promises";
-import { cloudinaryProjectAPI, controllerWrapper, HttpError } from "../helpers";
+import {
+  cloudinaryProjectAPI,
+  controllerWrapper,
+  HttpError,
+  parseTechnicalStack,
+} from "../helpers";
 import ProjectModel from "../models/project";
 import UserModel from "../models/user";
 
@@ -66,6 +71,7 @@ const addProject = controllerWrapper(async (req: any, res: Response) => {
     ...req.body,
     owner,
     projectImages: [...uploadedPosters],
+    technicalStack: parseTechnicalStack(req.body.technicalStack),
   });
 
   if (!project) {
