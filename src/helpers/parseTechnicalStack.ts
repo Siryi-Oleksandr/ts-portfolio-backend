@@ -1,4 +1,8 @@
 function parseTechnicalStack(technicalStack: string): string[] {
+  if (!technicalStack.trim()) {
+    return [];
+  }
+
   return technicalStack.split(",").map((tech) => {
     // Trim any leading or trailing spaces
     tech = tech.trim();
