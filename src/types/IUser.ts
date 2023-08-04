@@ -9,7 +9,7 @@ export interface IUserRegister {
   phone?: string;
   telegram?: string;
   summary?: string;
-  technicalStack?: string;
+  technicalStack?: [string];
   avatarURL?: string;
   avatarID?: string;
   miniAvatarURL?: string;
@@ -29,7 +29,7 @@ export interface IUserModel {
   phone?: string;
   telegram?: string;
   summary?: string;
-  technicalStack?: string;
+  technicalStack?: [string];
   avatarURL?: string;
   avatarID?: string;
   miniAvatarURL?: string;
@@ -52,6 +52,6 @@ export interface IUserResponse {
   avatarURL: string;
   miniAvatarURL: string;
   profession: string;
-  technicalStack: string;
+  technicalStack: [string];
   experience: string;
 }
