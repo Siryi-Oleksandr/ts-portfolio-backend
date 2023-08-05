@@ -85,7 +85,7 @@ const addProject = controllerWrapper(async (req: any, res: Response) => {
 const getProjectById = controllerWrapper(
   async (req: Request, res: Response) => {
     const { projectId } = req.params;
-    const project = await ProjectModel.find(
+    const project = await ProjectModel.findOne(
       { _id: projectId },
       "-createdAt -updatedAt"
     ).populate("owner", "name surname email avatarURL");
