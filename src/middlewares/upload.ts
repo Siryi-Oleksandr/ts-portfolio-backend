@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 // set limit for files
 const limits = {
-  fileSize: 1024 * 1024, // 1 Mb
+  fileSize: 5 * 1024 * 1024, // 5 Mb
 };
 
 // Only JPEG, PNG, and GIF images are allowed
