@@ -243,7 +243,7 @@ const getUsers = controllerWrapper(async (req: Request, res: Response) => {
 //* GET /:userId
 const getUserById = controllerWrapper(async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const user = await UserModel.find(
+  const user = await UserModel.findOne(
     { _id: userId },
     "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
   );
