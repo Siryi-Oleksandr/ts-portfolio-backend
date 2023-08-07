@@ -14,6 +14,11 @@ class JoiAPI {
   private phoneRegexp: RegExp =
     /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
 
+  private imageSchema = Joi.object({
+    posterURL: Joi.string().uri().required(),
+    posterID: Joi.string().required(),
+  });
+
   //* Class methods
 
   public registerSchema = Joi.object({
@@ -134,6 +139,8 @@ class JoiAPI {
     technicalStack: Joi.string().required().messages({
       "any.required": "Add at least one technical to the project",
     }),
+
+    projectImages: Joi.array().items(this.imageSchema),
   });
 
   public userPasswordSchema = Joi.object({
