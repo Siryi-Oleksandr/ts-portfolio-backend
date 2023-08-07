@@ -81,6 +81,52 @@ const addProject = controllerWrapper(async (req: any, res: Response) => {
   res.status(201).json(project);
 });
 
+//* PATCH /projects/:projectId
+const updateProject = controllerWrapper(async (req: any, res: Response) => {
+  const projectId = req.params.projectId;
+  const { _id: owner } = req.user;
+
+  // Find the project by ID and the owner's ID
+  const projectToUpdate = await ProjectModel.findOne({ _id: projectId, owner });
+
+  if (!projectToUpdate) {
+    throw new HttpError(404, `Project not found`);
+  }
+
+  // Update the project properties based on the request body
+  Object.assign(projectToUpdate, {
+    ...req.body,
+    technicalStack: parseTechnicalStack(req.body.technicalStack),
+  });
+
+  // Handle image updates if files are present in the request
+  if (req.files && req.files.length > 0) {
+    const updatedPosters = await Promise.all(
+      req.files.map(async (file: Express.Multer.File) => {
+        await fs.access(file.path);
+        const fileData = await cloudinaryProjectAPI.uploadPoster(file.path);
+        const posterURL = fileData.url;
+        const posterID = fileData.public_id;
+        await fs.unlink(file.path);
+        return { posterURL, posterID };
+      })
+    );
+
+    // Update the project's image URLs and IDs
+    projectToUpdate.projectImages = updatedPosters;
+  }
+
+  const updatedProject = await ProjectModel.findByIdAndUpdate(
+    projectId,
+    projectToUpdate,
+    {
+      new: true,
+    }
+  );
+
+  res.json(updatedProject);
+});
+
 //* GET /projects/:projectId
 const getProjectById = controllerWrapper(
   async (req: Request, res: Response) => {
@@ -114,6 +160,7 @@ export {
   getProjectById,
   removeProject,
   getProjectsByUserId,
+  updateProject,
 };
 
 // 1. додати проєкт POST /projects

@@ -6,6 +6,7 @@ import {
   getProjectById,
   getProjectsByUserId,
   removeProject,
+  updateProject,
 } from "../controllers/projectControllers";
 import { isValidId, isValidBody, auth, upload } from "../middlewares";
 import { joiAPI } from "../schemes/JoiAPI";
@@ -22,6 +23,13 @@ router.post(
   upload.array("posters", 3),
   isValidBody(joiAPI.projectSchema),
   addProject
+);
+router.patch(
+  "/:projectId",
+  auth,
+  upload.array("posters", 3),
+  isValidBody(joiAPI.projectSchema),
+  updateProject
 );
 router.delete("/:projectId", isValidId("projectId"), removeProject);
 
