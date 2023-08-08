@@ -44,14 +44,14 @@ export interface IUserResponse {
   name: string;
   surname: string;
   email: string;
+  profession: string;
+  experience: string;
   phone: string;
   telegram: string;
   linkedinURL: string;
   gitHubURL: string;
   summary: string;
+  technicalStack: [string];
   avatarURL: string;
   miniAvatarURL: string;
-  profession: string;
-  technicalStack: [string];
-  experience: string;
 }

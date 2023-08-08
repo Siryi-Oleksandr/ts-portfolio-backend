@@ -13,7 +13,7 @@ import { joiAPI } from "../schemes/JoiAPI";
 
 const router = express.Router();
 
-router.get("/", getProjects);
+router.get("/query", getProjects);
 router.get("/own", auth, getOwnProjects);
 router.get("/own/:userId", isValidId("userId"), getProjectsByUserId);
 router.get("/:projectId", isValidId("projectId"), getProjectById);

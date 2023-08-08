@@ -8,22 +8,61 @@ import {
 } from "../helpers";
 import ProjectModel from "../models/project";
 import UserModel from "../models/user";
+import { IProjectResponse } from "types/IProject";
 
 // *******************  /projects  ******************
 
-//* GET /projects
+//* GET /projects/byQuery
 const getProjects = controllerWrapper(async (req: Request, res: Response) => {
-  const { page = 1, limit = 10 } = req.query as {
+  const {
+    page = 1,
+    limit = 10,
+    query,
+  } = req.query as {
     page?: number;
     limit?: number;
+    query?: string;
   };
   const skip = (page - 1) * limit;
-  const projects = await ProjectModel.find({}, "-createdAt -updatedAt", {
-    skip,
-    limit,
-  }).populate("owner", "name surname email avatarURL");
 
-  res.json(projects);
+  let projects: IProjectResponse[] = [];
+  let totalCount: number = 0; // Initialize the total count to 0
+
+  if (query) {
+    // Get the  projects matching the query
+    const queryRegex = new RegExp(query, "i"); //option "i" allows get result without matches register
+    projects = await ProjectModel.find(
+      {
+        technicalStack: { $in: [queryRegex] },
+      },
+      "-createdAt -updatedAt"
+    )
+      .skip(skip)
+      .limit(limit)
+      .populate(
+        "owner",
+        "name surname email avatarURL profession phone telegram gitHubURL linkedinURL miniAvatarURL"
+      );
+
+    // Get the total count of projects matching the query
+    totalCount = await ProjectModel.countDocuments({
+      technicalStack: { $in: [queryRegex] },
+    });
+  } else {
+    // Get the all  projects without query
+    projects = await ProjectModel.find({}, "-createdAt -updatedAt")
+      .skip(skip)
+      .limit(limit)
+      .populate(
+        "owner",
+        "name surname email avatarURL profession phone telegram gitHubURL linkedinURL miniAvatarURL"
+      );
+
+    // Get the total count of all projects
+    totalCount = await ProjectModel.countDocuments({});
+  }
+
+  res.json({ projects, totalCount });
 });
 
 //* GET /projects/own
@@ -101,6 +140,11 @@ const updateProject = controllerWrapper(async (req: any, res: Response) => {
 
   // Handle image updates if files are present in the request
   if (req.files && req.files.length > 0) {
+    // delete previous posters
+    projectToUpdate.projectImages.map(async (poster) => {
+      await cloudinaryProjectAPI.delete(poster.posterID);
+    });
+
     const updatedPosters = await Promise.all(
       req.files.map(async (file: Express.Multer.File) => {
         await fs.access(file.path);
