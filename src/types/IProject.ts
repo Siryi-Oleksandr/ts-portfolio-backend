@@ -15,3 +15,15 @@ export interface IProjectModel {
   technicalStack: [string];
   owner: Schema.Types.ObjectId;
 }
+
+export interface IProjectResponse {
+  _id: string;
+  projectTitle: string;
+  projectSubTitle: string;
+  projectLink: string;
+  codeLink: string;
+  projectImages: IPoster[];
+  aboutProject: string;
+  technicalStack: [string];
+  owner: Schema.Types.ObjectId;
+}
