@@ -8,7 +8,8 @@ import {
   update,
   getUsers,
   getUserById,
-  //   changePassword,
+  updateSubscription,
+  changePassword,
   //   googleAuth,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
@@ -40,11 +41,17 @@ router.patch(
   isValidBody(joiAPI.updateUserSchema),
   update
 );
-// router.patch(
-//   "/changePassword",
-//   auth,
-//   isValidBody(joiAPI.userPasswordSchema),
-//   changePassword
-// );
+router.patch(
+  "/updateSubscription",
+  auth,
+  isValidBody(joiAPI.updateSubscriptionSchema),
+  updateSubscription
+);
+router.patch(
+  "/changePassword",
+  auth,
+  isValidBody(joiAPI.userPasswordSchema),
+  changePassword
+);
 
 export default router;

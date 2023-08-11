@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 class JoiAPI {
-  // private categoryType = ["to-do", "in-progress", "done"];
+  private subscriptionType = ["start", "vip"];
 
   private emailRegexp: RegExp =
     /^([A-z0-9_-]+\.)*[A-z0-9_-]+@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z]{2,6}$/;
@@ -13,6 +13,8 @@ class JoiAPI {
     /(https?:\/\/)?(www[.])?(telegram|t)\.me\/([a-zA-Z0-9_-]*)\/?$/;
   private phoneRegexp: RegExp =
     /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
+  private internetLinkRegexp: RegExp =
+    /\b(?:https?|ftp):\/\/[^\s/$.?#]+\.[^\s]*\b/;
 
   private imageSchema = Joi.object({
     posterURL: Joi.string().uri().required(),
@@ -115,6 +117,11 @@ class JoiAPI {
         "string.pattern.base":
           "The GitHub link format is incorrect. Please enter in the format 'https://github.com/Alex-Doe'",
       }),
+
+    subscription: Joi.string()
+      .valid(...this.subscriptionType)
+      .required()
+      .messages({ "any.required": "Missing required 'subscription' field" }),
   });
 
   public projectSchema = Joi.object({
@@ -128,9 +135,13 @@ class JoiAPI {
 
     projectSubTitle: Joi.string().allow(""),
 
-    projectLink: Joi.string().allow(""),
+    projectLink: Joi.string()
+      .allow("")
+      .pattern(new RegExp(this.internetLinkRegexp)),
 
-    codeLink: Joi.string().allow(""),
+    codeLink: Joi.string()
+      .allow("")
+      .pattern(new RegExp(this.internetLinkRegexp)),
 
     aboutProject: Joi.string().required().messages({
       "any.required": "Missing required 'description project' field",
@@ -150,9 +161,16 @@ class JoiAPI {
     }),
 
     newPassword: Joi.string().min(6).required().messages({
-      "any.required": "New password is required",
+      "any.required": "Password is required",
       "string.min": "The length of 'new password' must be min 6 characters",
     }),
+  });
+
+  public updateSubscriptionSchema = Joi.object({
+    subscription: Joi.string()
+      .valid(...this.subscriptionType)
+      .required()
+      .messages({ "any.required": "Missing required 'subscription' field" }),
   });
 }
 
