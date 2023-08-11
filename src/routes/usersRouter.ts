@@ -12,6 +12,7 @@ import {
   changePassword,
   forgotPassword,
   googleAuth,
+  resetPassword,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
 import { isValidBody, auth, upload, isValidId, passport } from "../middlewares";
@@ -55,6 +56,6 @@ router.patch(
   changePassword
 );
 router.post("/forgotPassword", forgotPassword);
-// router.post("/reset-password", ctrl.resetPassword);
+router.post("/resetPassword", resetPassword);
 
 export default router;
