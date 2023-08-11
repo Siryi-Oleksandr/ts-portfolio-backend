@@ -10,7 +10,7 @@ import {
 } from "../helpers";
 import UserModel from "../models/user";
 // import jwt from "jsonwebtoken";
-// const { REFRESH_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
+const { FRONTEND_URL = "" } = process.env;
 
 // ******************* API:  /  ******************
 
@@ -296,17 +296,17 @@ const changePassword = controllerWrapper(async (req: any, res: Response) => {
 
 // * Google Auth
 
-// const googleAuth = async (req: any, res: Response) => {
-//   const { _id } = req.user;
+const googleAuth = async (req: any, res: Response) => {
+  const { _id } = req.user;
 
-//   const { accessToken, refreshToken } = assignTokens(req.user);
+  const { accessToken, refreshToken } = assignTokens(req.user);
 
-//   await UserModel.findByIdAndUpdate(_id, { accessToken, refreshToken });
+  await UserModel.findByIdAndUpdate(_id, { accessToken, refreshToken });
 
-//   res.redirect(
-//     `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken${refreshToken}`
-//   );
-// };
+  res.redirect(
+    `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken${refreshToken}`
+  );
+};
 
 //* POST /refresh
 // const refresh = controllerWrapper(async (req: Request, res: Response) => {
@@ -353,5 +353,5 @@ export {
   getUserById,
   updateSubscription,
   changePassword,
-  // googleAuth,
+  googleAuth,
 };
