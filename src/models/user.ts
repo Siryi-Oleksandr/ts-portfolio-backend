@@ -30,6 +30,7 @@ interface IUser extends Document {
   subscription: Subscription;
   refreshToken: string;
   accessToken: string;
+  resetPasswordToken: string;
 }
 
 type Subscription = "start" | "vip";
@@ -98,6 +99,11 @@ const userSchema = new Schema<IUser>(
     },
 
     accessToken: {
+      type: String,
+      default: "",
+    },
+
+    resetPasswordToken: {
       type: String,
       default: "",
     },

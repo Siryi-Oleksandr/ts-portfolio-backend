@@ -7,8 +7,11 @@ import {
   controllerWrapper,
   cloudinaryUserAPI,
   parseTechnicalStack,
+  tokenCreator,
+  sendMail,
 } from "../helpers";
 import UserModel from "../models/user";
+import { templateMailForgotPassword } from "templates/mailForgotPassword";
 // import jwt from "jsonwebtoken";
 // const { REFRESH_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
 
@@ -41,7 +44,7 @@ const register = controllerWrapper(async (req: Request, res: Response) => {
     {
       new: true,
       select:
-        "-createdAt -updatedAt -accessToken -refreshToken -password -avatarID",
+        "-createdAt -updatedAt -accessToken -refreshToken -resetPasswordToken -password -avatarID",
     }
   );
 
@@ -72,7 +75,7 @@ const login = controllerWrapper(async (req: Request, res: Response) => {
     {
       new: true,
       select:
-        "-createdAt -updatedAt -accessToken -refreshToken -password -avatarID",
+        "-createdAt -updatedAt -accessToken -refreshToken -resetPasswordToken -password -avatarID",
     }
   );
 
@@ -209,7 +212,7 @@ const getUsers = controllerWrapper(async (req: Request, res: Response) => {
           { surname: { $regex: queryRegex } },
         ],
       },
-      "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
+      "-password -accessToken -refreshToken -resetPasswordToken -avatarID -createdAt -updatedAt"
     )
       .skip(skip)
       .limit(limit);
@@ -224,7 +227,7 @@ const getUsers = controllerWrapper(async (req: Request, res: Response) => {
   } else {
     users = await UserModel.find(
       {},
-      "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
+      "-password -accessToken -refreshToken -resetPasswordToken -avatarID -createdAt -updatedAt"
     )
       .skip(skip)
       .limit(limit);
@@ -241,7 +244,7 @@ const getUserById = controllerWrapper(async (req: Request, res: Response) => {
   const { userId } = req.params;
   const user = await UserModel.findOne(
     { _id: userId },
-    "-password -accessToken -refreshToken -avatarID -createdAt -updatedAt"
+    "-password -accessToken -refreshToken -resetPasswordToken -avatarID -createdAt -updatedAt"
   );
 
   if (!user) {
@@ -293,6 +296,58 @@ const changePassword = controllerWrapper(async (req: any, res: Response) => {
 
   res.json({ message: "Password changed successfully" });
 });
+
+// * forgotPassword
+const forgotPassword = controllerWrapper(async (req: any, res: Response) => {
+  const { email } = req.body;
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new HttpError(404, `User with ${email} not found`);
+  }
+
+  const resetToken = tokenCreator.getResetToken(user._id);
+
+  await UserModel.findByIdAndUpdate(user._id, {
+    resetPasswordToken: resetToken,
+  });
+
+  const resetUrl = `https://a-pinchuk.github.io/githack-GooseTrack-app/reset-password/${resetToken}`;
+
+  await sendMail({
+    to: email,
+    subject: "Password Reset Request",
+    html: templateMailForgotPassword(resetUrl),
+  });
+
+  res.status(200).json({ message: "Password reset link sent to your email." });
+});
+
+// * resetPassword
+// const resetPassword = controllerWrapper(async (req: any, res: Response) => {
+//   const { token, newPassword } = req.body;
+
+//   if (!token || !newPassword) {
+//     throw HttpError(400, "Token and new password are required");
+//   }
+
+//   const decoded = jwt.verify(token, process.env.JWT_RESET);
+//   const user = await usersServices.findUser({
+//     _id: decoded.id,
+//     resetPasswordToken: token,
+//   });
+
+//   if (!user) {
+//     throw HttpError(400, "Token is invalid or has expired");
+//   }
+
+//   user.password = await bcrypt.hash(newPassword, 10);
+//   user.resetPasswordToken = undefined;
+
+//   await user.save();
+
+//   res.status(200).json({ message: "Password reset successful." });
+// });
 
 // * Google Auth
 
@@ -353,5 +408,6 @@ export {
   getUserById,
   updateSubscription,
   changePassword,
+  forgotPassword,
   // googleAuth,
 };
