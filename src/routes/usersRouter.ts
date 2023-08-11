@@ -13,7 +13,6 @@ import {
   forgotPassword,
   googleAuth,
   resetPassword,
-  //   googleAuth,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
 import { isValidBody, auth, upload, isValidId, passport } from "../middlewares";
