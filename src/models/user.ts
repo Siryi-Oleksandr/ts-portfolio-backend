@@ -27,9 +27,12 @@ interface IUser extends Document {
   miniAvatarURL?: string;
   linkedinURL?: string;
   gitHubURL?: string;
+  subscription: Subscription;
   refreshToken: string;
   accessToken: string;
 }
+
+type Subscription = "start" | "vip";
 
 const userSchema = new Schema<IUser>(
   {
@@ -82,6 +85,11 @@ const userSchema = new Schema<IUser>(
     summary: {
       type: String,
       default: "",
+    },
+
+    subscription: {
+      type: String,
+      default: "start",
     },
 
     refreshToken: {

@@ -20,12 +20,6 @@ interface RequestBody {
   name?: string;
 }
 
-// interface IUser {
-//   userId: string;
-//   userName: string;
-//   userEmail: string;
-// }
-
 //* POST /register
 const register = controllerWrapper(async (req: Request, res: Response) => {
   const { email, password }: RequestBody = req.body;
@@ -114,6 +108,7 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
     profession,
     technicalStack,
     experience,
+    subscription,
     accessToken,
     refreshToken,
   } = req.user;
@@ -135,6 +130,7 @@ const getCurrentUser = controllerWrapper(async (req: any, res: Response) => {
       profession,
       technicalStack,
       experience,
+      subscription,
     },
   });
 });
@@ -255,29 +251,48 @@ const getUserById = controllerWrapper(async (req: Request, res: Response) => {
   res.json(user);
 });
 
+//* PATCH /updateSubscription
+const updateSubscription = controllerWrapper(
+  async (req: any, res: Response) => {
+    const { _id } = req.user;
+    const { subscription } = req.body;
+
+    const user = await UserModel.findById(_id);
+    if (!user) {
+      throw new HttpError(401, `User not found`);
+    }
+
+    await UserModel.findByIdAndUpdate(_id, {
+      subscription,
+    });
+
+    res.json({ message: "Subscription changed successfully" });
+  }
+);
+
 //* PATCH /changePassword
-// const changePassword = controllerWrapper(async (req: any, res: Response) => {
-//   const { _id } = req.user;
-//   const { password, newPassword } = req.body;
+const changePassword = controllerWrapper(async (req: any, res: Response) => {
+  const { _id } = req.user;
+  const { password, newPassword } = req.body;
 
-//   const user = await UserModel.findById(_id);
-//   if (!user) {
-//     throw new HttpError(401, `User not found`);
-//   }
+  const user = await UserModel.findById(_id);
+  if (!user) {
+    throw new HttpError(401, `User not found`);
+  }
 
-//   const isMatch = await bcrypt.compare(password, user.password);
-//   if (!isMatch) {
-//     throw new HttpError(401, `Password invalid`);
-//   }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new HttpError(401, `Password invalid`);
+  }
 
-//   const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-//   await UserModel.findByIdAndUpdate(_id, {
-//     password: hashedPassword,
-//   });
+  await UserModel.findByIdAndUpdate(_id, {
+    password: hashedPassword,
+  });
 
-//   res.json({ message: "password changed successfully" });
-// });
+  res.json({ message: "Password changed successfully" });
+});
 
 // * Google Auth
 
@@ -336,6 +351,7 @@ export {
   update,
   getUsers,
   getUserById,
-  // changePassword,
+  updateSubscription,
+  changePassword,
   // googleAuth,
 };
