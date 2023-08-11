@@ -10,6 +10,7 @@ import {
 } from "../helpers";
 import UserModel from "../models/user";
 // import jwt from "jsonwebtoken";
+// const { REFRESH_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
 const { FRONTEND_URL = "" } = process.env;
 
 // ******************* API:  /  ******************
