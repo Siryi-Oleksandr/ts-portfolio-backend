@@ -13,7 +13,7 @@ import {
 } from "../helpers";
 import UserModel from "../models/user";
 import { templateMailForgotPassword } from "../templates/mailForgotPassword";
-const { RESET_TOKEN_SECRET_KEY = "" } = process.env;
+const { RESET_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
 
 // ******************* API:  /  ******************
 
@@ -366,17 +366,17 @@ const resetPassword = controllerWrapper(async (req: any, res: Response) => {
 
 // * Google Auth
 
-// const googleAuth = async (req: any, res: Response) => {
-//   const { _id } = req.user;
+const googleAuth = async (req: any, res: Response) => {
+  const { _id } = req.user;
 
-//   const { accessToken, refreshToken } = assignTokens(req.user);
+  const { accessToken, refreshToken } = assignTokens(req.user);
 
-//   await UserModel.findByIdAndUpdate(_id, { accessToken, refreshToken });
+  await UserModel.findByIdAndUpdate(_id, { accessToken, refreshToken });
 
-//   res.redirect(
-//     `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken${refreshToken}`
-//   );
-// };
+  res.redirect(
+    `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken${refreshToken}`
+  );
+};
 
 //* POST /refresh
 // const refresh = controllerWrapper(async (req: Request, res: Response) => {
@@ -425,5 +425,5 @@ export {
   changePassword,
   forgotPassword,
   resetPassword,
-  // googleAuth,
+  googleAuth,
 };

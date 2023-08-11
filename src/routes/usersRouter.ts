@@ -11,23 +11,24 @@ import {
   updateSubscription,
   changePassword,
   forgotPassword,
+  googleAuth,
   resetPassword,
   //   googleAuth,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
-import { isValidBody, auth, upload, isValidId } from "../middlewares";
+import { isValidBody, auth, upload, isValidId, passport } from "../middlewares";
 
 const router = express.Router();
 
-// router.get(
-//   "/google",
-//   passport.authenticate("google", { scope: ["email", "profile"] })
-// );
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", { session: false }),
-//   googleAuth
-// );
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  googleAuth
+);
 
 router.get("/", getUsers);
 router.post("/register", isValidBody(joiAPI.registerSchema), register);
