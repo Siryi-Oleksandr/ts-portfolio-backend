@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import fs from "fs/promises";
 import {
   HttpError,
@@ -7,13 +8,12 @@ import {
   controllerWrapper,
   cloudinaryUserAPI,
   parseTechnicalStack,
-  tokenCreator,
+  // tokenCreator,
   sendMail,
 } from "../helpers";
 import UserModel from "../models/user";
 import { templateMailForgotPassword } from "../templates/mailForgotPassword";
-// import jwt from "jsonwebtoken";
-// const { REFRESH_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
+const { RESET_TOKEN_SECRET_KEY = "" } = process.env;
 
 // ******************* API:  /  ******************
 
@@ -21,6 +21,12 @@ interface RequestBody {
   email: string;
   password: string;
   name?: string;
+}
+
+interface IPayload {
+  userId: string;
+  userName: string;
+  userEmail: string;
 }
 
 //* POST /register
@@ -306,14 +312,14 @@ const forgotPassword = controllerWrapper(async (req: any, res: Response) => {
     throw new HttpError(404, `User with ${email} not found`);
   }
 
-  const resetToken = tokenCreator.getResetToken(user._id);
+  // const resetToken = tokenCreator.getResetToken(user._id);
+  const { resetToken } = assignTokens(user);
 
   await UserModel.findByIdAndUpdate(user._id, {
     resetPasswordToken: resetToken,
   });
 
-  const resetUrl = `http://localhost:3000/portfolio-frontend/changePassword/${resetToken}`;
-
+  const resetUrl = `http://localhost:3000/portfolio-frontend/resetPassword/${resetToken}`;
   await sendMail({
     to: email,
     subject: "Password Reset Request",
@@ -323,31 +329,40 @@ const forgotPassword = controllerWrapper(async (req: any, res: Response) => {
   res.status(200).json({ message: "Password reset link sent to your email." });
 });
 
-// * resetPassword
-// const resetPassword = controllerWrapper(async (req: any, res: Response) => {
-//   const { token, newPassword } = req.body;
+// * POST /resetPassword
+const resetPassword = controllerWrapper(async (req: any, res: Response) => {
+  const { resetToken, newPassword } = req.body;
 
-//   if (!token || !newPassword) {
-//     throw HttpError(400, "Token and new password are required");
-//   }
+  if (!resetToken || !newPassword) {
+    throw new HttpError(400, "Token and new password are required");
+  }
 
-//   const decoded = jwt.verify(token, process.env.JWT_RESET);
-//   const user = await usersServices.findUser({
-//     _id: decoded.id,
-//     resetPasswordToken: token,
-//   });
+  let decoded: IPayload;
 
-//   if (!user) {
-//     throw HttpError(400, "Token is invalid or has expired");
-//   }
+  try {
+    decoded = jwt.verify(resetToken, RESET_TOKEN_SECRET_KEY) as IPayload;
+  } catch (error) {
+    throw new HttpError(400, "Token is invalid or has expired");
+  }
 
-//   user.password = await bcrypt.hash(newPassword, 10);
-//   user.resetPasswordToken = undefined;
+  const user = await UserModel.findOne({
+    _id: decoded.userId,
+    resetPasswordToken: resetToken,
+  });
 
-//   await user.save();
+  if (!user) {
+    throw new HttpError(400, "Token is invalid or has expired");
+  }
 
-//   res.status(200).json({ message: "Password reset successful." });
-// });
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  await UserModel.findByIdAndUpdate(user._id, {
+    password: hashedPassword,
+    resetPasswordToken: "",
+  });
+
+  res.status(200).json({ message: "Password reset successful." });
+});
 
 // * Google Auth
 
@@ -409,5 +424,6 @@ export {
   updateSubscription,
   changePassword,
   forgotPassword,
+  resetPassword,
   // googleAuth,
 };
