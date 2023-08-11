@@ -319,7 +319,7 @@ const forgotPassword = controllerWrapper(async (req: any, res: Response) => {
     resetPasswordToken: resetToken,
   });
 
-  const resetUrl = `https://ts-projects-api.onrender.com/resetPassword/${resetToken}`;
+  const resetUrl = `https://siryi-oleksandr.github.io/portfolio-frontend/resetPassword/${resetToken}`;
   await sendMail({
     to: email,
     subject: "Password Reset Request",
