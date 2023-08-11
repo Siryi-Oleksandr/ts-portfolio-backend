@@ -10,6 +10,7 @@ import {
   getUserById,
   updateSubscription,
   changePassword,
+  forgotPassword,
   //   googleAuth,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
@@ -53,5 +54,7 @@ router.patch(
   isValidBody(joiAPI.userPasswordSchema),
   changePassword
 );
+router.post("/forgotPassword", forgotPassword);
+// router.post("/reset-password", ctrl.resetPassword);
 
 export default router;
