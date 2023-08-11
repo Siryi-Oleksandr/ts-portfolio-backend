@@ -11,7 +11,7 @@ import {
   sendMail,
 } from "../helpers";
 import UserModel from "../models/user";
-import { templateMailForgotPassword } from "templates/mailForgotPassword";
+import { templateMailForgotPassword } from "../templates/mailForgotPassword";
 // import jwt from "jsonwebtoken";
 // const { REFRESH_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
 
@@ -297,7 +297,7 @@ const changePassword = controllerWrapper(async (req: any, res: Response) => {
   res.json({ message: "Password changed successfully" });
 });
 
-// * forgotPassword
+// * POST /forgotPassword
 const forgotPassword = controllerWrapper(async (req: any, res: Response) => {
   const { email } = req.body;
   const user = await UserModel.findOne({ email });
