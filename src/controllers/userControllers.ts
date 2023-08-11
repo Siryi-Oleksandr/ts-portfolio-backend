@@ -312,7 +312,7 @@ const forgotPassword = controllerWrapper(async (req: any, res: Response) => {
     resetPasswordToken: resetToken,
   });
 
-  const resetUrl = `https://a-pinchuk.github.io/githack-GooseTrack-app/reset-password/${resetToken}`;
+  const resetUrl = `http://localhost:3000/portfolio-frontend/changePassword/${resetToken}`;
 
   await sendMail({
     to: email,
