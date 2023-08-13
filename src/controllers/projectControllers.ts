@@ -91,15 +91,20 @@ const getProjectsByUserId = controllerWrapper(
 
 //* POST /projects
 const addProject = controllerWrapper(async (req: any, res: Response) => {
-  const { _id: owner } = req.user;
+  const { _id: owner, subscription } = req.user;
 
   // Upload each poster to Cloudinary
   const uploadedPosters = await Promise.all(
     req.files.map(async (file: Express.Multer.File) => {
       await fs.access(file.path);
-      const fileData = await cloudinaryProjectAPI.uploadPoster(file.path);
-      const posterURL = fileData.url;
-      const posterID = fileData.public_id;
+      let fileData;
+      if (subscription === "vip") {
+        fileData = await cloudinaryProjectAPI.uploadVIPPoster(file.path);
+      } else {
+        fileData = await cloudinaryProjectAPI.uploadPoster(file.path);
+      }
+      const posterURL = fileData?.url;
+      const posterID = fileData?.public_id;
 
       await fs.unlink(file.path);
       return { posterURL, posterID };
@@ -123,7 +128,7 @@ const addProject = controllerWrapper(async (req: any, res: Response) => {
 //* PATCH /projects/:projectId
 const updateProject = controllerWrapper(async (req: any, res: Response) => {
   const projectId = req.params.projectId;
-  const { _id: owner } = req.user;
+  const { _id: owner, subscription } = req.user;
 
   // Find the project by ID and the owner's ID
   const projectToUpdate = await ProjectModel.findOne({ _id: projectId, owner });
@@ -148,9 +153,14 @@ const updateProject = controllerWrapper(async (req: any, res: Response) => {
     const updatedPosters = await Promise.all(
       req.files.map(async (file: Express.Multer.File) => {
         await fs.access(file.path);
-        const fileData = await cloudinaryProjectAPI.uploadPoster(file.path);
-        const posterURL = fileData.url;
-        const posterID = fileData.public_id;
+        let fileData;
+        if (subscription === "vip") {
+          fileData = await cloudinaryProjectAPI.uploadVIPPoster(file.path);
+        } else {
+          fileData = await cloudinaryProjectAPI.uploadPoster(file.path);
+        }
+        const posterURL = fileData?.url;
+        const posterID = fileData?.public_id;
         await fs.unlink(file.path);
         return { posterURL, posterID };
       })
