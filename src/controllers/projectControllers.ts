@@ -216,9 +216,3 @@ export {
   getProjectsByUserId,
   updateProject,
 };
-
-// 1. додати проєкт POST /projects
-// 2. отримати всі проєкти GET /projects
-// 3. отримати всі власні проєкти GET /projects/own
-// 2. отримати проєкт по Id GET /projects/:projectId
-// 2. видалити DELETE /projects/:projectId

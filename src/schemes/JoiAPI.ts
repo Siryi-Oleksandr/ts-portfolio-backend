@@ -117,11 +117,6 @@ class JoiAPI {
         "string.pattern.base":
           "The GitHub link format is incorrect. Please enter in the format 'https://github.com/Alex-Doe'",
       }),
-
-    subscription: Joi.string()
-      .valid(...this.subscriptionType)
-      .required()
-      .messages({ "any.required": "Missing required 'subscription' field" }),
   });
 
   public projectSchema = Joi.object({
