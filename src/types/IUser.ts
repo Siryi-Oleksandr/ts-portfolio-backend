@@ -16,7 +16,7 @@ export interface IUserResponse {
   subscription: Subscription;
 }
 
-type Subscription = "start" | "vip";
+type Subscription = "start" | "pro";
 
 // export interface IUserRegister {
 //   _id: string;
