@@ -21,6 +21,14 @@ class CloudinaryAPI {
     return fileData;
   }
 
+  async uploadVIPPoster(tempPath: string) {
+    const fileData = await cloudinary.v2.uploader.upload(tempPath, {
+      folder: this.folder,
+    });
+
+    return fileData;
+  }
+
   async uploadPoster(tempPath: string) {
     const fileData = await cloudinary.v2.uploader.upload(tempPath, {
       width: 800, // Resize to a maximum width of 800px
