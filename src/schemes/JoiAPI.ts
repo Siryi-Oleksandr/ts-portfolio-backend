@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 class JoiAPI {
-  private subscriptionType = ["start", "vip"];
+  private subscriptionType = ["start", "pro"];
 
   private emailRegexp: RegExp =
     /^([A-z0-9_-]+\.)*[A-z0-9_-]+@[A-z0-9_-]+(\.[A-z0-9_-]+)*\.[A-z]{2,6}$/;

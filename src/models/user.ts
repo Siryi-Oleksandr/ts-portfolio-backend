@@ -33,7 +33,7 @@ interface IUser extends Document {
   resetPasswordToken: string;
 }
 
-type Subscription = "start" | "vip";
+type Subscription = "start" | "pro";
 
 const userSchema = new Schema<IUser>(
   {

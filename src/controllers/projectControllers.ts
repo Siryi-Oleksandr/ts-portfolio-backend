@@ -98,7 +98,7 @@ const addProject = controllerWrapper(async (req: any, res: Response) => {
     req.files.map(async (file: Express.Multer.File) => {
       await fs.access(file.path);
       let fileData;
-      if (subscription === "vip") {
+      if (subscription === "pro") {
         fileData = await cloudinaryProjectAPI.uploadVIPPoster(file.path);
       } else {
         fileData = await cloudinaryProjectAPI.uploadPoster(file.path);
@@ -154,7 +154,7 @@ const updateProject = controllerWrapper(async (req: any, res: Response) => {
       req.files.map(async (file: Express.Multer.File) => {
         await fs.access(file.path);
         let fileData;
-        if (subscription === "vip") {
+        if (subscription === "pro") {
           fileData = await cloudinaryProjectAPI.uploadVIPPoster(file.path);
         } else {
           fileData = await cloudinaryProjectAPI.uploadPoster(file.path);
