@@ -27,7 +27,7 @@ interface IUser extends Document {
   miniAvatarURL?: string;
   linkedinURL?: string;
   gitHubURL?: string;
-  subscription: Subscription;
+  subscription?: Subscription;
   refreshToken: string;
   accessToken: string;
   resetPasswordToken: string;
