@@ -23,6 +23,7 @@ class CloudinaryAPI {
 
   async uploadVIPPoster(tempPath: string) {
     const fileData = await cloudinary.v2.uploader.upload(tempPath, {
+      quality: 95, // Reduce image quality to a lower setting
       folder: this.folder,
     });
 

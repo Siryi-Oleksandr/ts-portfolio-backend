@@ -364,6 +364,16 @@ const resetPassword = controllerWrapper(async (req: any, res: Response) => {
   res.status(200).json({ message: "Password reset successful." });
 });
 
+//* DELETE /:userId
+const removeUser = controllerWrapper(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const removedUser = await UserModel.findByIdAndRemove(userId);
+  if (!removedUser) {
+    throw new HttpError(404, `User with ${removedUser} not found`);
+  }
+  res.json({ message: "user deleted" });
+});
+
 // * Google Auth
 
 const googleAuth = async (req: any, res: Response) => {
@@ -378,44 +388,10 @@ const googleAuth = async (req: any, res: Response) => {
   );
 };
 
-//* POST /refresh
-// const refresh = controllerWrapper(async (req: Request, res: Response) => {
-//   const { refreshToken: token } = req.body;
-
-//   try {
-//     const { userId, userName, userEmail } = jwt.verify(
-//       token,
-//       REFRESH_TOKEN_SECRET_KEY
-//     ) as IUser;
-
-//     const isExist = await UserModel.findOne({ refreshToken: token });
-
-//     if (!isExist) {
-//       throw new HttpError(403, "Refresh token invalid");
-//     }
-
-//     const { accessToken, refreshToken } = assignTokens({
-//       _id: userId,
-//       name: userName,
-//       email: userEmail,
-//     });
-
-//     await UserModel.findByIdAndUpdate(userId, {
-//       accessToken,
-//       refreshToken,
-//     });
-
-//     res.json({ accessToken, refreshToken });
-//   } catch (error: any) {
-//     throw new HttpError(403, error.message);
-//   }
-// });
-
 // * exports
 export {
   register,
   login,
-  // refresh,
   logout,
   getCurrentUser,
   update,
@@ -425,5 +401,6 @@ export {
   changePassword,
   forgotPassword,
   resetPassword,
+  removeUser,
   googleAuth,
 };

@@ -3,7 +3,6 @@ import {
   register,
   login,
   logout,
-  //   refresh,
   getCurrentUser,
   update,
   getUsers,
@@ -11,8 +10,9 @@ import {
   updateSubscription,
   changePassword,
   forgotPassword,
-  googleAuth,
   resetPassword,
+  removeUser,
+  googleAuth,
 } from "../controllers/userControllers";
 import { joiAPI } from "../schemes/JoiAPI";
 import { isValidBody, auth, upload, isValidId, passport } from "../middlewares";
@@ -32,7 +32,6 @@ router.get(
 router.get("/", getUsers);
 router.post("/register", isValidBody(joiAPI.registerSchema), register);
 router.post("/login", isValidBody(joiAPI.loginSchema), login);
-// router.post("/refresh", isValidBody(joiAPI.refreshSchema), refresh);
 router.post("/logout", auth, logout);
 router.get("/current", auth, getCurrentUser);
 router.get("/:userId", isValidId("userId"), getUserById);
@@ -57,5 +56,6 @@ router.patch(
 );
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
+router.delete("/:userId", auth, isValidId("userId"), removeUser);
 
 export default router;
