@@ -13,7 +13,11 @@ import {
 } from "../helpers";
 import UserModel from "../models/user";
 import { templateMailForgotPassword } from "../templates/mailForgotPassword";
-const { RESET_TOKEN_SECRET_KEY = "", FRONTEND_URL = "" } = process.env;
+const {
+  RESET_TOKEN_SECRET_KEY = "",
+  FRONTEND_URL = "",
+  REFRESH_TOKEN_SECRET_KEY = "",
+} = process.env;
 
 // ******************* API:  /  ******************
 
@@ -98,6 +102,39 @@ const logout = controllerWrapper(async (req: any, res: Response) => {
   await UserModel.findByIdAndUpdate(_id, { refreshToken: "", accessToken: "" });
 
   res.status(200).json({ message: "logout successfull" });
+});
+
+//* POST /refresh
+const refresh = controllerWrapper(async (req: Request, res: Response) => {
+  const { refreshToken: token } = req.body;
+
+  try {
+    const { userId, userName, userEmail } = jwt.verify(
+      token,
+      REFRESH_TOKEN_SECRET_KEY
+    ) as IPayload;
+
+    const isExist = await UserModel.findOne({ refreshToken: token });
+
+    if (!isExist) {
+      throw new HttpError(403, "Refresh token invalid");
+    }
+
+    const { accessToken, refreshToken } = assignTokens({
+      _id: userId,
+      name: userName,
+      email: userEmail,
+    });
+
+    await UserModel.findByIdAndUpdate(userId, {
+      accessToken,
+      refreshToken,
+    });
+
+    res.json({ accessToken, refreshToken });
+  } catch (error: any) {
+    throw new HttpError(403, error.message);
+  }
 });
 
 //* GET /current
@@ -403,4 +440,5 @@ export {
   resetPassword,
   removeUser,
   googleAuth,
+  refresh,
 };
