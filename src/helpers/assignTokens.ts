@@ -40,32 +40,3 @@ export const assignTokens = (user: IUser) => {
 
   return { accessToken, refreshToken, resetToken };
 };
-
-// class TokenCreator {
-//   getAccessToken(userId: string) {
-//     return jwt.sign(userId, ACCESS_TOKEN_SECRET_KEY, {
-//       expiresIn: ACCESS_TOKEN_EXPIRES_IN,
-//     });
-//   }
-
-//   getRefreshToken(userId: string) {
-//     return jwt.sign(userId, REFRESH_TOKEN_SECRET_KEY, {
-//       expiresIn: REFRESH_TOKEN_EXPIRES_IN,
-//     });
-//   }
-
-//   getResetToken(userId: string) {
-//     return jwt.sign(userId, RESET_TOKEN_SECRET_KEY, {
-//       expiresIn: RESET_TOKEN_EXPIRES_IN,
-//     });
-//   }
-
-//   getPairTokens(userId: string) {
-//     const accessToken = this.getAccessToken(userId);
-//     const refreshToken = this.getRefreshToken(userId);
-
-//     return { accessToken, refreshToken };
-//   }
-// }
-
-// export const tokenCreator = new TokenCreator();
