@@ -12,9 +12,9 @@ import {
   cloudinaryProjectAPI,
 } from "../helpers";
 import UserModel from "../models/user";
+import ProjectModel from "../models/project";
 import { templateMailForgotPassword } from "../templates/mailForgotPassword";
-import { IUserResponse } from "types/IUser";
-import ProjectModel from "models/project";
+import { IUserResponse } from "../types/IUser";
 const {
   RESET_TOKEN_SECRET_KEY = "",
   FRONTEND_URL = "",
