@@ -12,6 +12,7 @@ export interface IUserResponse {
   summary: string;
   technicalStack: [string];
   avatarURL: string;
+  avatarID?: string;
   miniAvatarURL: string;
   subscription: Subscription;
 }

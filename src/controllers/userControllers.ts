@@ -9,10 +9,12 @@ import {
   cloudinaryUserAPI,
   parseTechnicalStack,
   sendMail,
+  cloudinaryProjectAPI,
 } from "../helpers";
 import UserModel from "../models/user";
 import { templateMailForgotPassword } from "../templates/mailForgotPassword";
-import { IUserModel } from "types/IUser";
+import { IUserResponse } from "types/IUser";
+import ProjectModel from "models/project";
 const {
   RESET_TOKEN_SECRET_KEY = "",
   FRONTEND_URL = "",
@@ -404,7 +406,7 @@ const resetPassword = controllerWrapper(async (req: any, res: Response) => {
 //* DELETE /:userId
 const removeUser = controllerWrapper(async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const { avatarID } = req.user as IUserModel;
+  const { _id: owner, avatarID } = req.user as IUserResponse;
 
   const removedUser = await UserModel.findByIdAndRemove(userId);
   if (!removedUser) {
@@ -414,7 +416,22 @@ const removeUser = controllerWrapper(async (req: Request, res: Response) => {
     await cloudinaryUserAPI.delete(avatarID);
   }
 
-  res.json({ message: "user deleted" });
+  const projects = await ProjectModel.find({ owner });
+  if (projects.length !== 0) {
+    projects.map(async (project) => {
+      const removedProject = await ProjectModel.findByIdAndRemove(project._id);
+      if (!removedProject) {
+        throw new HttpError(404, `Project with ${project._id} not found`);
+      }
+
+      // delete project posters
+      removedProject.projectImages.map(async (poster) => {
+        await cloudinaryProjectAPI.delete(poster.posterID);
+      });
+    });
+  }
+
+  res.json({ message: "user deleted with all own projects" });
 });
 
 // * Google Auth
