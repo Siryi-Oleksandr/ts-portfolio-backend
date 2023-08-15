@@ -8,11 +8,11 @@ import {
   controllerWrapper,
   cloudinaryUserAPI,
   parseTechnicalStack,
-  // tokenCreator,
   sendMail,
 } from "../helpers";
 import UserModel from "../models/user";
 import { templateMailForgotPassword } from "../templates/mailForgotPassword";
+import { IUserModel } from "types/IUser";
 const {
   RESET_TOKEN_SECRET_KEY = "",
   FRONTEND_URL = "",
@@ -404,10 +404,16 @@ const resetPassword = controllerWrapper(async (req: any, res: Response) => {
 //* DELETE /:userId
 const removeUser = controllerWrapper(async (req: Request, res: Response) => {
   const { userId } = req.params;
+  const { avatarID } = req.user as IUserModel;
+
   const removedUser = await UserModel.findByIdAndRemove(userId);
   if (!removedUser) {
     throw new HttpError(404, `User with ${removedUser} not found`);
   }
+  if (avatarID) {
+    await cloudinaryUserAPI.delete(avatarID);
+  }
+
   res.json({ message: "user deleted" });
 });
 
