@@ -31,6 +31,6 @@ router.patch(
   isValidBody(joiAPI.projectSchema),
   updateProject
 );
-router.delete("/:projectId", isValidId("projectId"), removeProject);
+router.delete("/:projectId", auth, isValidId("projectId"), removeProject);
 
 export default router;

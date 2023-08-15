@@ -9,6 +9,7 @@ import {
 import ProjectModel from "../models/project";
 import UserModel from "../models/user";
 import { IProjectResponse } from "types/IProject";
+import { IUserResponse } from "types/IUser";
 
 // *******************  /projects  ******************
 
@@ -200,10 +201,22 @@ const getProjectById = controllerWrapper(
 //* DELETE /projects/:projectId
 const removeProject = controllerWrapper(async (req: Request, res: Response) => {
   const { projectId } = req.params;
-  const removedProject = await ProjectModel.findByIdAndRemove(projectId);
+  const { _id: owner } = req.user as IUserResponse;
+
+  // Find the project by ID and the owner's ID
+  const removedProject = await ProjectModel.findOneAndRemove({
+    _id: projectId,
+    owner,
+  });
   if (!removedProject) {
     throw new HttpError(404, `Project with ${projectId} not found`);
   }
+
+  // delete project posters
+  removedProject.projectImages.map(async (poster) => {
+    await cloudinaryProjectAPI.delete(poster.posterID);
+  });
+
   res.json({ message: "project deleted" });
 });
 

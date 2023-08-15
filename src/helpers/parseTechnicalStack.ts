@@ -1,6 +1,12 @@
 function parseTechnicalStack(technicalStack: string): string[] {
+  technicalStack = technicalStack.trim();
   if (!technicalStack.trim()) {
     return [];
+  }
+
+  if (!/^[a-zA-Z]$/.test(technicalStack.slice(-1))) {
+    // Remove the last character (possible comma)
+    technicalStack = technicalStack.slice(0, -1);
   }
 
   return technicalStack.split(",").map((tech) => {
