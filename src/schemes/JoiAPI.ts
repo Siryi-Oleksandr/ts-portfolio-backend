@@ -128,7 +128,7 @@ class JoiAPI {
         "The length of 'title' must be between 3 and 100 characters",
     }),
 
-    projectSubTitle: Joi.string().allow(""),
+    projectSubTitle: Joi.string().allow("").max(200),
 
     projectLink: Joi.string()
       .allow("")

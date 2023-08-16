@@ -19,14 +19,19 @@ const limits = {
   fileSize: 5 * 1024 * 1024, // 5 Mb
 };
 
-// Only JPEG, PNG, and GIF images are allowed
+// Only JPEG, PNG, GIF and Webp images are allowed
 const fileFilter = (
   _req: Request,
   file: Express.Multer.File,
   cb: FileFilterCallback
 ) => {
   // Check if the file MIME type is in the accepted image types
-  const acceptedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+  const acceptedMimeTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+  ];
   if (acceptedMimeTypes.includes(file.mimetype)) {
     cb(null, true); // Accept the file
   } else {

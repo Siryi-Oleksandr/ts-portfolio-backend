@@ -12,7 +12,7 @@ const projectSchema = new Schema<IProjectModel>(
     },
     projectSubTitle: {
       type: String,
-      maxlength: 100,
+      maxlength: 200,
       default: "",
     },
     projectLink: {
