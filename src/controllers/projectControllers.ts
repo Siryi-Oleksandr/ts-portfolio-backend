@@ -223,9 +223,9 @@ const removeProject = controllerWrapper(async (req: Request, res: Response) => {
 export {
   getProjects,
   getOwnProjects,
-  addProject,
   getProjectById,
-  removeProject,
   getProjectsByUserId,
+  addProject,
   updateProject,
+  removeProject,
 };
