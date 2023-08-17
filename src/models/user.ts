@@ -111,13 +111,13 @@ const userSchema = new Schema<IUser>(
     avatarURL: {
       type: String,
       default:
-        "https://res.cloudinary.com/dsjxdktiz/image/upload/v1690985797/avatars/nbewgn0cyuvs6rpjbqow.png",
+        "https://res.cloudinary.com/dsjxdktiz/image/upload/v1692295827/avatars/avatar_d7yqcc.png",
     },
 
     miniAvatarURL: {
       type: String,
       default:
-        "https://res.cloudinary.com/dsjxdktiz/image/upload/v1690985797/avatars/nbewgn0cyuvs6rpjbqow.png",
+        "https://res.cloudinary.com/dsjxdktiz/image/upload/v1692295827/avatars/avatar_d7yqcc.png",
     },
 
     avatarID: {
