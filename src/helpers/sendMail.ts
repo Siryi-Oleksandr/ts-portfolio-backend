@@ -30,7 +30,7 @@ const sendMail = async (data: IEmailData) => {
   try {
     await transporter.sendMail(emailOptions);
   } catch (error: any) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
