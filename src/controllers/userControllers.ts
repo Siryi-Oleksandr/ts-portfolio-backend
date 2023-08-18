@@ -444,7 +444,7 @@ const googleAuth = async (req: any, res: Response) => {
   await UserModel.findByIdAndUpdate(_id, { accessToken, refreshToken });
 
   res.redirect(
-    `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken${refreshToken}`
+    `${FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
   );
 };
 
