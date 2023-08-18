@@ -36,7 +36,7 @@ class CloudinaryAPI {
     const fileData = await cloudinary.v2.uploader.upload(tempPath, {
       width: 800, // Resize to a maximum width of 800px
       height: 450, // Resize to a maximum height of 450px
-      quality: 50, // Reduce image quality to a lower setting
+      quality: 70, // Reduce image quality to a lower setting
       crop: "limit", // Crop the image to fit within the specified dimensions
       progressive: true, // Enable progressive JPEG encoding
       folder: this.folder, // Optional: Specify a folder in Cloudinary
