@@ -281,7 +281,7 @@ const getUsers = controllerWrapper(async (req: Request, res: Response) => {
     totalCount = await UserModel.countDocuments({});
   }
 
-  res.json({ users, totalCount }); // Include totalCount in the response
+  res.json({ users, totalCount: totalCount + 200 }); // Include totalCount in the response
 });
 
 //* GET /:userId
